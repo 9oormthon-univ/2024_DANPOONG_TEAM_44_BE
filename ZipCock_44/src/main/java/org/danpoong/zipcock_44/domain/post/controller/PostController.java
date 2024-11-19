@@ -136,10 +136,17 @@ public class PostController {
     }
 
 
-    @PutMapping("/{postId}")
+    @PutMapping()
     public ApiResponse<PostIdSearchResponseDTO> updatePost(@RequestBody PostUpdateRequestDTO requestDTO) {
         postService.updatePost(requestDTO);
         return ApiResponse.ok(null);
     }
+
+    @DeleteMapping("/{postId}")
+    public ApiResponse<Void> deletePost(@PathVariable Long postId, @RequestParam Long userId ) {
+        postService.deletePost(postId, userId);
+        return ApiResponse.ok(null); // 성공 응답
+    }
+
 
 }

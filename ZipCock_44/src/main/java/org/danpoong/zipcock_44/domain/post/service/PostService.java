@@ -108,4 +108,19 @@ public class PostService {
         return post;
     }
 
+    @Transactional
+    public void deletePost(Long postId, Long userId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("Post not found with id: " + postId));
+
+        // 작성자 검증
+        if (!(post.getUser().getId() == userId)) {
+            throw new SecurityException("You do not have permission to delete this post.");
+        }
+
+        // 게시글 삭제
+        postRepository.delete(post);
+    }
+
+
 }
