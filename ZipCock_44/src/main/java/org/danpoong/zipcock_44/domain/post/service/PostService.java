@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.danpoong.zipcock_44.domain.post.entity.Image;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PostService {
@@ -46,5 +47,9 @@ public class PostService {
 
     public Page<Post> getPostsWithRepresentativeImage(Pageable pageable) {
         return postRepository.findAllWithRepresentativeImage(pageable);
+    }
+
+    public Optional<Post> findPostById(Long postId) {
+        return postRepository.findById(postId);
     }
 }
