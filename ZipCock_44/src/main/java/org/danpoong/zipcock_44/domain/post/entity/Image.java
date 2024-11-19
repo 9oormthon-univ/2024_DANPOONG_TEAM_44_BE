@@ -22,21 +22,23 @@ public class Image {
     private Post post;
 
     @Lob
-    @Column(name = "image_data", nullable = false)
+    @Column(name = "image_data")
     private byte[] imageData;
 
     @Column(name = "file_name", nullable = false)
     private String fileName;
 
+    @Column(name = "is_representative", nullable = false)
+    private boolean isRepresentative; // 대표 사진 여부
 
     public void setPost(Post post) {
         this.post = post;
     }
 
-
     @Builder
-    public Image(byte[] imageData, String fileName) {
+    public Image(byte[] imageData, String fileName, boolean isRepresentative) {
         this.imageData = imageData;
         this.fileName = fileName;
+        this.isRepresentative = isRepresentative;
     }
 }

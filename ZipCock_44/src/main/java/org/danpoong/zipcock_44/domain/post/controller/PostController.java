@@ -29,10 +29,16 @@ public class PostController {
                 .map(fileData -> Image.builder()
                         .imageData(Base64.getDecoder().decode(fileData.getFileContent()))
                         .fileName(fileData.getFileName())
+                        .isRepresentative(false)
                         .build())
                 .toList();
 
-        Post post = postService.createPostWithJson(dto.getUserId(), dto.getContent(), images, dto.getTitle(), dto.getLatitude(), dto.getLongitude());
+        Image representativeImage = Image.builder().imageData(Base64.getDecoder().decode(dto.getRepresentativeFileData().getFileContent()))
+                .fileName(dto.getRepresentativeFileData().getFileName())
+                .isRepresentative(true)
+                .build();
+
+        Post post = postService.createPostWithJson(dto.getUserId(), dto.getContent(), images, dto.getTitle(), dto.getLatitude(), dto.getLongitude(), representativeImage);
         return ApiResponse.ok(null);
     }
 }
