@@ -2,6 +2,7 @@ package org.danpoong.zipcock_44.domain.post.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -26,4 +27,16 @@ public class Image {
 
     @Column(name = "file_name", nullable = false)
     private String fileName;
+
+
+    public void setPost(Post post) {
+        this.post = post;
+    }
+
+
+    @Builder
+    public Image(byte[] imageData, String fileName) {
+        this.imageData = imageData;
+        this.fileName = fileName;
+    }
 }

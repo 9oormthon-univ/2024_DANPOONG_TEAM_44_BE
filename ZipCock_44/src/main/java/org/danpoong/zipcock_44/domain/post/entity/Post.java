@@ -40,5 +40,18 @@ public class Post extends BaseEntity {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Image> images = new ArrayList<>();
 
+    public Post(User user, String title, String content, double latitude, double longitude) {
+        this.user = user;
+        this.title = title;
+        this.content = content;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
 
+
+    //-------연관관계 메서드-------//
+    public void addImage(Image image) {
+        image.setPost(this); // Post와 Image의 연관 관계 설정
+        this.images.add(image);
+    }
 }
