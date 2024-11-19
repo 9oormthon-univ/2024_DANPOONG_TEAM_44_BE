@@ -123,4 +123,9 @@ public class PostService {
     }
 
 
+    @Transactional(readOnly = true)
+    public Page<Post> findPostsByUser(Long userId, Pageable pageable) {
+        return postRepository.findAllByUserId(userId, pageable);
+    }
+
 }

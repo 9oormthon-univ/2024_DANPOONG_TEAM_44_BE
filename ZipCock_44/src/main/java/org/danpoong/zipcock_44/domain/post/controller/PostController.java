@@ -10,6 +10,8 @@ import org.danpoong.zipcock_44.domain.post.service.PostService;
 import org.danpoong.zipcock_44.global.common.response.ApiResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Base64;
@@ -107,6 +109,7 @@ public class PostController {
         return ApiResponse.ok(responseDTO);
     }
 
+    //키워드를 통한 게시글 서치
     @GetMapping("/search")
     public ApiResponse<Page<PostSearchResponseDTO>> searchPostsWithRepresentativeImageByTitle(
             @RequestParam String keyword, Pageable pageable
@@ -136,17 +139,49 @@ public class PostController {
     }
 
 
+    //게시글 수정
     @PutMapping()
     public ApiResponse<PostIdSearchResponseDTO> updatePost(@RequestBody PostUpdateRequestDTO requestDTO) {
         postService.updatePost(requestDTO);
         return ApiResponse.ok(null);
     }
 
+    //게시글 삭제
     @DeleteMapping("/{postId}")
-    public ApiResponse<Void> deletePost(@PathVariable Long postId, @RequestParam Long userId ) {
+    public ApiResponse<Void> deletePost(@PathVariable Long postId, @RequestParam Long userId) {
         postService.deletePost(postId, userId);
         return ApiResponse.ok(null); // 성공 응답
     }
 
+
+    //내가 작성한 글 서치
+    @GetMapping("/my-posts")
+    public ApiResponse<Page<PostSearchResponseDTO>> getMyPosts(@RequestParam Long userId,
+                                                               @PageableDefault(size = 10, page = 0, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
+
+        Page<Post> posts = postService.findPostsByUser(userId, pageable);
+
+        // DTO로 변환
+        Page<PostSearchResponseDTO> responseDTOs = posts.map(post -> {
+            Image representativeImage = post.getImages().stream()
+                    .filter(Image::isRepresentative)
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalStateException("Representative image not found for post id: " + post.getId()));
+
+            return PostSearchResponseDTO.builder()
+                    .title(post.getTitle())
+                    .id(post.getId())
+                    .content(post.getContent())
+                    .authorName(post.getUser().getName())
+                    .createdDate(post.getCreatedDate())
+                    .image(PostSearchResponseDTO.ImageDTO.builder()
+                            .fileName(representativeImage.getFileName())
+                            .fileData(Base64.getEncoder().encodeToString(representativeImage.getImageData()))
+                            .build())
+                    .build();
+        });
+
+        return ApiResponse.ok(responseDTOs);
+    }
 
 }
