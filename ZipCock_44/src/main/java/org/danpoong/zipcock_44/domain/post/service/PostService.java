@@ -52,4 +52,9 @@ public class PostService {
     public Optional<Post> findPostById(Long postId) {
         return postRepository.findById(postId);
     }
+
+    // 제목 검색 및 대표 이미지 포함
+    public Page<Post> findAllWithRepresentativeImageByTitle(String keyword, Pageable pageable) {
+        return postRepository.findAllWithRepresentativeImageByTitle(keyword, pageable);
+    }
 }

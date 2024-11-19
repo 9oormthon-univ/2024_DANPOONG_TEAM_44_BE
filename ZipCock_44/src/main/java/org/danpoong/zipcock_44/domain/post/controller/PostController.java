@@ -8,7 +8,9 @@ import org.danpoong.zipcock_44.domain.post.entity.Post;
 import org.danpoong.zipcock_44.domain.post.service.PostService;
 import org.danpoong.zipcock_44.global.common.response.ApiResponse;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Base64;
@@ -24,6 +26,7 @@ public class PostController {
         this.postService = postService;
     }
 
+    //게시글 생성
     @PostMapping
     public ApiResponse<?> createPostWithJson(@RequestBody PostRequestDTO dto) {
         List<Image> images = dto.getFileData().stream()
@@ -43,6 +46,7 @@ public class PostController {
         return ApiResponse.ok(null);
     }
 
+    //게시글 조회
     @GetMapping
     public ApiResponse<Page<PostSearchResponseDTO>> getPostsWithRepresentativeImage(Pageable pageable) {
         Page<Post> posts = postService.getPostsWithRepresentativeImage(pageable);
@@ -103,4 +107,37 @@ public class PostController {
 
         return ApiResponse.ok(responseDTO);
     }
+
+    @GetMapping("/search")
+    public ApiResponse<Page<PostSearchResponseDTO>> searchPostsWithRepresentativeImageByTitle(
+            @RequestParam String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
+        Page<Post> posts = postService.findAllWithRepresentativeImageByTitle(keyword, pageable);
+
+        Page<PostSearchResponseDTO> responseDTOs = posts.map(post -> {
+            Image representativeImage = post.getImages().stream()
+                    .filter(Image::isRepresentative)
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalStateException("Representative image not found for post id: " + post.getId()));
+
+            return PostSearchResponseDTO.builder()
+                    .title(post.getTitle())
+                    .id(post.getId())
+                    .content(post.getContent())
+                    .authorName(post.getUser().getName()) // 작성자 이름
+                    .createdDate(post.getCreatedDate()) // 작성 날짜
+                    .image(PostSearchResponseDTO.ImageDTO.builder()
+                            .fileName(representativeImage.getFileName()) // 파일 이름
+                            .fileData(Base64.getEncoder().encodeToString(representativeImage.getImageData())) // Base64 인코딩된 데이터
+                            .build())
+                    .build();
+        });
+
+        return ApiResponse.ok(responseDTOs);
+    }
+
+
 }

@@ -7,4 +7,6 @@ import org.springframework.data.domain.Pageable;
 public interface PostRepositoryCustom {
 
     Page<Post> findAllWithRepresentativeImage(Pageable pageable);   //대표사진만 포함해서 page반환
+
+    Page<Post> findAllWithRepresentativeImageByTitle(String keyword, Pageable pageable);   //Title
 }

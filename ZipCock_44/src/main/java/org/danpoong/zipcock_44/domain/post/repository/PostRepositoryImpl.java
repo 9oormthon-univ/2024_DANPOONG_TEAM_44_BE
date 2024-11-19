@@ -31,6 +31,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .where(image.isRepresentative.eq(true)) // 조건: 대표 이미지
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
+                .orderBy(post.createdDate.desc()) // 정렬
                 .fetch();
 
         // Total count
@@ -42,5 +43,32 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
 
         return new PageImpl<>(posts, pageable, total);
     }
+
+
+    @Override
+    public Page<Post> findAllWithRepresentativeImageByTitle(String keyword, Pageable pageable) {
+        // Fetch 검색 결과
+        List<Post> results = queryFactory
+                .selectFrom(post)
+                .leftJoin(post.images, image).fetchJoin() // 이미지와 조인
+                .where(post.title.containsIgnoreCase(keyword)
+                        .and(image.isRepresentative.eq(true))) // 제목 조건 + 대표 이미지 조건
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(post.createdDate.desc()) // 정렬
+                .fetch();
+
+        // Total Count
+        long total = queryFactory
+                .select(post.count())
+                .from(post)
+                .leftJoin(post.images, image)
+                .where(post.title.containsIgnoreCase(keyword)
+                        .and(image.isRepresentative.eq(true))) // 제목 조건 + 대표 이미지 조건
+                .fetchOne();
+
+        return new PageImpl<>(results, pageable, total);
+    }
+
 }
 
