@@ -4,6 +4,8 @@ import org.danpoong.zipcock_44.domain.post.entity.Post;
 import org.danpoong.zipcock_44.domain.post.repository.PostRepository;
 import org.danpoong.zipcock_44.domain.user.User;
 import org.danpoong.zipcock_44.domain.user.repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.danpoong.zipcock_44.domain.post.entity.Image;
@@ -39,5 +41,10 @@ public class PostService {
 
 
         return postRepository.save(post); // Post 및 연관된 Image 저장
+    }
+
+
+    public Page<Post> getPostsWithRepresentativeImage(Pageable pageable) {
+        return postRepository.findAllWithRepresentativeImage(pageable);
     }
 }

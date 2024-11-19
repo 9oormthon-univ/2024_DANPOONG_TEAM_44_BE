@@ -1,14 +1,14 @@
 package org.danpoong.zipcock_44.domain.post.controller;
 
 import org.danpoong.zipcock_44.domain.post.dto.request.PostRequestDTO;
+import org.danpoong.zipcock_44.domain.post.dto.response.PostSearchResponseDTO;
 import org.danpoong.zipcock_44.domain.post.entity.Image;
 import org.danpoong.zipcock_44.domain.post.entity.Post;
 import org.danpoong.zipcock_44.domain.post.service.PostService;
 import org.danpoong.zipcock_44.global.common.response.ApiResponse;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Base64;
 import java.util.List;
@@ -41,4 +41,29 @@ public class PostController {
         Post post = postService.createPostWithJson(dto.getUserId(), dto.getContent(), images, dto.getTitle(), dto.getLatitude(), dto.getLongitude(), representativeImage);
         return ApiResponse.ok(null);
     }
+
+    @GetMapping
+    public ApiResponse<Page<PostSearchResponseDTO>> getPostsWithRepresentativeImage(Pageable pageable) {
+        Page<Post> posts = postService.getPostsWithRepresentativeImage(pageable);
+        Page<PostSearchResponseDTO> responseDTOs = posts.map(post -> {
+            Image representativeImage = post.getImages().stream()
+                    .filter(Image::isRepresentative)
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalStateException("Representative image not found for post id: " + post.getId()));
+
+            return PostSearchResponseDTO.builder()
+                    .title(post.getTitle())
+                    .id(post.getId())
+                    .content(post.getContent())
+                    .authorName(post.getUser().getName()) // 작성자 이름
+                    .createdDate(post.getCreatedDate()) // 작성 날짜
+                    .image(PostSearchResponseDTO.ImageDTO.builder()
+                            .fileName(representativeImage.getFileName()) // 파일 이름
+                            .fileData(Base64.getEncoder().encodeToString(representativeImage.getImageData())) // Base64 인코딩된 데이터
+                            .build())
+                    .build();
+        });
+        return ApiResponse.ok(responseDTOs);
+    }
+
 }
