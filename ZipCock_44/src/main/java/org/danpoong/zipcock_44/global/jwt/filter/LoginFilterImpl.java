@@ -5,9 +5,11 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import lombok.Data;
 import org.danpoong.zipcock_44.global.jwt.entity.Refresh;
 import org.danpoong.zipcock_44.global.jwt.repository.RefreshRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,25 +25,27 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 
-
+@Data
 @Component
 public class LoginFilterImpl extends UsernamePasswordAuthenticationFilter{
 
-
+    @Autowired
     private final AuthenticationManager authenticationManager; // final 필드
+
+    @Autowired
     private final JWTUtil jwtUtil;
+
+    @Autowired
     private final RefreshRepository refreshRepository;
 
-    // 생성자 주입
-    @Autowired
-    public LoginFilterImpl(AuthenticationManager authenticationManager, JWTUtil jwtUtil, RefreshRepository refreshRepository) {
-        this.authenticationManager = authenticationManager;
+
+    public LoginFilterImpl(AuthenticationManager authenticationManager, JWTUtil jwtUtil, RefreshRepository refreshRepository){
         this.jwtUtil = jwtUtil;
         this.refreshRepository = refreshRepository;
-
-        // AuthenticationManager를 필터에 설정
-        setAuthenticationManager(authenticationManager);
+        this.authenticationManager = authenticationManager;
+        super.setAuthenticationManager(authenticationManager);
     }
+
 
     // 쿠키 생성 메소드
     private Cookie createCookie(String key, String value) {

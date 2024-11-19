@@ -39,11 +39,9 @@ public class UserController {
     }
 
     @DeleteMapping("/signout")
-    public ResponseEntity signOut(@RequestHeader("Authorization") String token){
+    public ResponseEntity signOut(@RequestHeader("access") String token){
         try {
-
-            String jwtToken = token.substring(7).trim(); // "Bearer " 제거 후 공백 제거
-            String loginId = jwtUtil.getLoginId(jwtToken);
+            String loginId = jwtUtil.getLoginId(token);
             if (loginId == null) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("로그인 ID를 찾을 수 없습니다.");
             }
@@ -51,9 +49,9 @@ public class UserController {
 
             // 로그인 ID가 없으면 실패 처리
             if (loginId == null) {
+                log.info("b");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("로그인 ID를 찾을 수 없습니다.");
             }
-
             // 서비스 호출
             return userDetailsServiceImpl.signOut(loginId);
         } catch (RuntimeException ex) {

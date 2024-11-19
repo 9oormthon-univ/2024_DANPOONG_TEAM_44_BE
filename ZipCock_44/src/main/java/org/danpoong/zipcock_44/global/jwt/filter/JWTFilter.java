@@ -6,19 +6,33 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.danpoong.zipcock_44.domain.user.entity.User;
 import org.danpoong.zipcock_44.global.security.entity.UserDetailsImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 
+@Component
 @Data
+@Slf4j
 public class JWTFilter extends OncePerRequestFilter{
+
+
     private final JWTUtil jwtUtil;
+
+    @Autowired
+    public JWTFilter(JWTUtil jwtUtil){
+        this.jwtUtil = jwtUtil;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -39,6 +53,7 @@ public class JWTFilter extends OncePerRequestFilter{
 
             PrintWriter writer = response.getWriter();
             writer.print("Access Token Expired");
+            log.info("a");
 
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
@@ -53,6 +68,7 @@ public class JWTFilter extends OncePerRequestFilter{
             writer.print("Invalid Access Token");
 
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            log.info("b");
             return;
         }
 
@@ -66,9 +82,13 @@ public class JWTFilter extends OncePerRequestFilter{
                 .role(role)
                 .build();
 
+        log.info("c");
+
         UserDetailsImpl userDetailsImpl = new UserDetailsImpl(user);
 
         Authentication authToken = new UsernamePasswordAuthenticationToken(userDetailsImpl,null,userDetailsImpl.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authToken);
+        log.info("last");
+        filterChain.doFilter(request, response);
     }
 }

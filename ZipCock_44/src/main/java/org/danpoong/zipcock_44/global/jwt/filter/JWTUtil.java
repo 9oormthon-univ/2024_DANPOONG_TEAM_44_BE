@@ -1,6 +1,8 @@
 package org.danpoong.zipcock_44.global.jwt.filter;
 
 import io.jsonwebtoken.*;
+import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -10,10 +12,12 @@ import java.nio.charset.StandardCharsets;
 import java.security.SignatureException;
 import java.util.Date;
 @Component
+@Data
 public class JWTUtil {
 
+
     // JWT 비밀키 담는 필드
-    private SecretKey secretKey;
+    private final SecretKey secretKey;
 
     public JWTUtil(@Value("${spring.jwt.secret}") String secret){
 
@@ -46,7 +50,6 @@ public class JWTUtil {
                 .parseClaimsJws(token) // JWT 토큰 파싱
                 .getBody() // 페이로드 추출
                 .get("loginId", String.class); // loginId 추출
-
     }
 
     // 토큰에서 Role 추출
@@ -65,7 +68,6 @@ public class JWTUtil {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("category",String.class);
     }
 
-
     //새로운 JWT 토큰 생성하는 메소드
     public String createJwt(String category,String loginId, String role, Long expiredMs) {
 
@@ -78,6 +80,4 @@ public class JWTUtil {
                 .signWith(secretKey) // secretKey를 통해 signature 부분을 채움
                 .compact(); // JWT를 문자열 형식으로 변환하여 반환
     }
-
-
 }

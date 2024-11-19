@@ -2,6 +2,7 @@ package org.danpoong.zipcock_44.global.security.config;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.danpoong.zipcock_44.global.jwt.filter.JWTFilter;
 import org.danpoong.zipcock_44.global.jwt.filter.JWTUtil;
@@ -9,6 +10,7 @@ import org.danpoong.zipcock_44.global.jwt.filter.LoginFilterImpl;
 import org.danpoong.zipcock_44.global.jwt.filter.LogoutFilterImpl;
 import org.danpoong.zipcock_44.global.jwt.repository.RefreshRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -26,10 +28,13 @@ import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.util.Collections;
 
-@RequiredArgsConstructor
+
 @Configuration
 @EnableWebSecurity
+@ComponentScan(basePackages = "org.danpoong.zipcock_44")
+@Data
 public class SecurityConfig {
+
 
     private final AuthenticationConfiguration authenticationConfiguration;
     // AuthenticationManager가 인자로 받을 AuthenticationConfiguration 객체 생성자 주입
@@ -106,10 +111,10 @@ public class SecurityConfig {
                         .requestMatchers(allowUrls).permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN") // ADMIN 권한이 있는 사용자만 접근 가능
                         .requestMatchers("/reissue").permitAll() // Refresh로 Access 토큰 재발급 기능 URL
-                        .requestMatchers("/signout").hasRole("ADMIN") // 회원 탈퇴는 인증된 사용자만 가능
+                        .requestMatchers("/signout","/logout").authenticated() // 회원 탈퇴는 인증된 사용자만 가능
                         .anyRequest().authenticated()); // 나머지 경로는 인증된 사용자만 사용 가능
         http
-                .addFilterBefore(new JWTFilter(jwtUtil), LoginFilterImpl.class);
+                .addFilterBefore(new JWTFilter(jwtUtil),LoginFilterImpl.class);
         http
                 .addFilterAt(new LoginFilterImpl(authenticationManager(authenticationConfiguration), jwtUtil, refreshRepository), UsernamePasswordAuthenticationFilter.class);
         http
@@ -119,13 +124,9 @@ public class SecurityConfig {
         // LoginFilter : 로그인 요청을 처리하는 커스텀 터
         // authenticationConfiguration : 인증 관리자에 필요한 설정을 제공하는 객체 ( 코드 참조 ) -> authenticationManager를 사용해서 로그인 인증 처리
         // UsernamePasswordAuthenticationFilter.class : 사용자 이름과 비밀번호를 사용하여 인증을 수행하는 필터 ( Spring Security 기본 제공 )
-
-
         http // 세션 설정
                 .sessionManagement((session)->session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)); // JWT를 통한 인증 - 인가를 위해서 세션을 STATELESS 상태로 설정 -> RESTful API
-
-
         return http.build();
     }
 }
