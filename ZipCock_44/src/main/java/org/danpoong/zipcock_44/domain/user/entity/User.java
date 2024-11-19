@@ -51,5 +51,4 @@ public class User extends BaseTimeEntity {
         this.email = email;
         this.role = (role == null || role.isEmpty()) ? "ROLE_USER" : role;
     }
-
 }
