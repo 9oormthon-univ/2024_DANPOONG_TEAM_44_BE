@@ -1,6 +1,7 @@
 package org.danpoong.zipcock_44.domain.post.controller;
 
 import org.danpoong.zipcock_44.domain.post.dto.request.PostRequestDTO;
+import org.danpoong.zipcock_44.domain.post.dto.request.PostUpdateRequestDTO;
 import org.danpoong.zipcock_44.domain.post.dto.response.PostIdSearchResponseDTO;
 import org.danpoong.zipcock_44.domain.post.dto.response.PostSearchResponseDTO;
 import org.danpoong.zipcock_44.domain.post.entity.Image;
@@ -8,9 +9,7 @@ import org.danpoong.zipcock_44.domain.post.entity.Post;
 import org.danpoong.zipcock_44.domain.post.service.PostService;
 import org.danpoong.zipcock_44.global.common.response.ApiResponse;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Base64;
@@ -110,11 +109,8 @@ public class PostController {
 
     @GetMapping("/search")
     public ApiResponse<Page<PostSearchResponseDTO>> searchPostsWithRepresentativeImageByTitle(
-            @RequestParam String keyword,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam String keyword, Pageable pageable
     ) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
         Page<Post> posts = postService.findAllWithRepresentativeImageByTitle(keyword, pageable);
 
         Page<PostSearchResponseDTO> responseDTOs = posts.map(post -> {
@@ -139,5 +135,11 @@ public class PostController {
         return ApiResponse.ok(responseDTOs);
     }
 
+
+    @PutMapping("/{postId}")
+    public ApiResponse<PostIdSearchResponseDTO> updatePost(@RequestBody PostUpdateRequestDTO requestDTO) {
+        postService.updatePost(requestDTO);
+        return ApiResponse.ok(null);
+    }
 
 }

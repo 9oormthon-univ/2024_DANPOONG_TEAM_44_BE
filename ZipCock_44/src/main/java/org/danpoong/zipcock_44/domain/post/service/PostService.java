@@ -1,5 +1,7 @@
 package org.danpoong.zipcock_44.domain.post.service;
 
+import org.danpoong.zipcock_44.domain.post.dto.request.PostRequestDTO;
+import org.danpoong.zipcock_44.domain.post.dto.request.PostUpdateRequestDTO;
 import org.danpoong.zipcock_44.domain.post.entity.Post;
 import org.danpoong.zipcock_44.domain.post.repository.PostRepository;
 import org.danpoong.zipcock_44.domain.user.User;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.danpoong.zipcock_44.domain.post.entity.Image;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,4 +60,52 @@ public class PostService {
     public Page<Post> findAllWithRepresentativeImageByTitle(String keyword, Pageable pageable) {
         return postRepository.findAllWithRepresentativeImageByTitle(keyword, pageable);
     }
+
+    @Transactional
+    public Post updatePost(PostUpdateRequestDTO requestDTO) {
+        // 게시글 조회
+        Post post = postRepository.findById(requestDTO.getPostId())
+                .orElseThrow(() -> new IllegalArgumentException("Post not found with id: " + requestDTO.getPostId()));
+
+        // 작성자 검증
+        if (!(post.getUser().getId() == requestDTO.getUserId())) {
+            throw new SecurityException("You do not have permission to modify this post.");
+        }
+
+        // 제목 및 내용 수정
+        if (requestDTO.getTitle() != null) {
+            post.setTitle(requestDTO.getTitle());
+        }
+        if (requestDTO.getContent() != null) {
+            post.setContent(requestDTO.getContent());
+        }
+
+        // 기존 이미지 삭제 후 새로운 이미지 설정
+        post.getImages().clear();
+
+        // 새로운 대표 이미지 추가
+        if (requestDTO.getRepresentativeFileData() != null) {
+            Image representativeImage = Image.builder()
+                    .fileName(requestDTO.getRepresentativeFileData().getFileName())
+                    .imageData(Base64.getDecoder().decode(requestDTO.getRepresentativeFileData().getFileContent()))
+                    .isRepresentative(true)
+                    .build();
+            post.addImage(representativeImage);
+        }
+
+        // 새로운 기본 이미지 추가
+        if (requestDTO.getFileData() != null && !requestDTO.getFileData().isEmpty()) {
+            List<Image> newImages = requestDTO.getFileData().stream()
+                    .map(fileData -> Image.builder()
+                            .fileName(fileData.getFileName())
+                            .imageData(Base64.getDecoder().decode(fileData.getFileContent()))
+                            .isRepresentative(false)
+                            .build())
+                    .toList();
+            newImages.forEach(post::addImage);
+        }
+
+        return post;
+    }
+
 }

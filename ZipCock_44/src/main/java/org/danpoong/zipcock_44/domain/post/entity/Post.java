@@ -48,6 +48,13 @@ public class Post extends BaseEntity {
         this.longitude = longitude;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
 
     //-------연관관계 메서드-------//
     public void addImage(Image image) {
