@@ -2,20 +2,15 @@ package org.danpoong.zipcock_44.domain.user.service;
 
 
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import org.danpoong.zipcock_44.domain.user.UserRepository;
 import org.danpoong.zipcock_44.domain.user.dto.request.SignUpRequest;
 import org.danpoong.zipcock_44.domain.user.dto.response.SignUpResponse;
 import org.danpoong.zipcock_44.domain.user.entity.User;
-import org.danpoong.zipcock_44.global.security.entity.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 
 @Data
@@ -26,6 +21,9 @@ public class UserService {
     private final UserRepository userRepository;
     @Autowired
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Autowired
+    private final PasswordEncoder passwordEncoder;
+
 
     @Transactional
     public SignUpResponse signUp(SignUpRequest signUpRequest) throws Exception {
@@ -69,4 +67,6 @@ public class UserService {
                 .email(savedUser.getEmail())
                 .build();
     }
+
+
 }

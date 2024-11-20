@@ -3,6 +3,7 @@ package org.danpoong.zipcock_44.global.security.service;
 
 import lombok.Data;
 import org.danpoong.zipcock_44.domain.user.UserRepository;
+import org.danpoong.zipcock_44.domain.user.dto.request.ChangeLocationRequest;
 import org.danpoong.zipcock_44.domain.user.entity.User;
 import org.danpoong.zipcock_44.global.security.entity.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +50,24 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         else{
             throw new RuntimeException("회원 정보가 존재하지 않음");
         }
+    }
+
+    @Transactional
+    public ResponseEntity<?> changeLocation(String loginId, ChangeLocationRequest request){
+        Optional<User> user = userRepository.findByLoginId(loginId);
+        if (user.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("User not found with loginId: " + loginId);
+        }
+
+        User userPatch = user.get();
+
+        userPatch.setSido(request.getSido());
+        userPatch.setSigungu(request.getSigungu());
+        userPatch.setRoadname(request.getRoadname());
+
+        userRepository.save(userPatch);
+        return ResponseEntity.ok("사용자 위치 정보가 성공적으로 업데이트되었습니다.");
     }
 
 }
