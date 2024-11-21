@@ -24,6 +24,8 @@ public class QChatMessage extends EntityPathBase<ChatMessage> {
 
     public final org.danpoong.zipcock_44.global.common.QBaseTimeEntity _super = new org.danpoong.zipcock_44.global.common.QBaseTimeEntity(this);
 
+    public final ListPath<ChatMessageRead, QChatMessageRead> chatMessageReads = this.<ChatMessageRead, QChatMessageRead>createList("chatMessageReads", ChatMessageRead.class, QChatMessageRead.class, PathInits.DIRECT2);
+
     public final QChatRoom chatRoom;
 
     public final StringPath content = createString("content");

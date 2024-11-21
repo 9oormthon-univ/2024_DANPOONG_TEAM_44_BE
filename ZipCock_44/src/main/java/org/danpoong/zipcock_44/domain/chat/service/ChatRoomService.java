@@ -3,7 +3,11 @@ package org.danpoong.zipcock_44.domain.chat.service;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.danpoong.zipcock_44.domain.chat.dto.response.ChatRoomDto;
+import org.danpoong.zipcock_44.domain.chat.dto.response.ChatRoomSearchDto;
+import org.danpoong.zipcock_44.domain.chat.entity.ChatMessage;
 import org.danpoong.zipcock_44.domain.chat.entity.ChatRoom;
+import org.danpoong.zipcock_44.domain.chat.repository.ChatMessageReadRepository;
+import org.danpoong.zipcock_44.domain.chat.repository.ChatMessageRepository;
 import org.danpoong.zipcock_44.domain.chat.repository.ChatRoomRepository;
 import org.danpoong.zipcock_44.domain.post.entity.Post;
 import org.danpoong.zipcock_44.domain.post.repository.PostRepository;
@@ -11,7 +15,11 @@ import org.danpoong.zipcock_44.domain.user.User;
 import org.danpoong.zipcock_44.domain.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +28,8 @@ public class ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final ChatMessageRepository chatMessageRepository;
+    private final ChatMessageReadRepository chatMessageReadRepository;
 
     public ChatRoomDto createChatRoom(Long postId, Long buyerId) {
         Post post = postRepository.findById(postId)
@@ -47,5 +57,63 @@ public class ChatRoomService {
         chatRoomRepository.save(chatRoom);
 
         return ChatRoomDto.fromEntity(chatRoom);
+    }
+
+    public List<ChatRoomSearchDto> getUserChatRooms(Long userId) {
+        // 사용자가 구매자 또는 판매자로 참여한 채팅방 목록 조회
+        List<ChatRoom> chatRooms = chatRoomRepository.findByBuyerIdOrSellerId(userId, userId);
+
+        return chatRooms.stream()
+                .map(chatRoom -> {
+                    // 상대방 이름
+                    String opponentName = getOpponentName(chatRoom, userId);
+
+                    // 마지막 메시지 및 시간
+                    ChatMessage lastMessage = chatMessageRepository.findTopByChatRoomIdOrderByCreatedDateDesc(chatRoom.getId());
+                    String lastMessageContent = lastMessage != null ? lastMessage.getContent() : "";
+                    String timeSinceLastMessage = calculateTimeSinceLastMessage(lastMessage);
+
+                    // 읽지 않은 메시지 수
+                    int unreadMessageCount = chatMessageReadRepository.countUnreadMessages(chatRoom.getId(), userId);
+
+                    return ChatRoomSearchDto.builder()
+                            .chatRoomId(chatRoom.getId())
+                            .opponentName(opponentName)
+                            .postTitle(chatRoom.getPost().getTitle())
+                            .lastMessageContent(lastMessageContent)
+                            .unreadMessageCount(unreadMessageCount)
+                            .timeSinceLastMessage(timeSinceLastMessage)
+                            .sellerId(chatRoom.getSeller().getId())
+                            .buyerId(chatRoom.getBuyer().getId())
+                            .postId(chatRoom.getPost().getId())
+                            .build();
+                })
+                .collect(Collectors.toList());
+    }
+
+    private String getOpponentName(ChatRoom chatRoom, Long userId) {
+        if (chatRoom.getBuyer().getId() == (userId)) {
+            return chatRoom.getSeller().getName();
+        } else {
+            return chatRoom.getBuyer().getName();
+        }
+    }
+
+    private String calculateTimeSinceLastMessage(ChatMessage lastMessage) {
+        if (lastMessage == null) {
+            return "";
+        }
+        Duration duration = Duration.between(lastMessage.getCreatedDate(), LocalDateTime.now());
+        long minutes = duration.toMinutes();
+
+        if (minutes < 1) {
+            return "방금 전";
+        } else if (minutes < 60) {
+            return minutes + "분 전";
+        } else if (minutes < 1440) {
+            return (minutes / 60) + "시간 전";
+        } else {
+            return (minutes / 1440) + "일 전";
+        }
     }
 }

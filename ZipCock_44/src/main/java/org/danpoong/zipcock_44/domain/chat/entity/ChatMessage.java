@@ -5,6 +5,9 @@ import lombok.*;
 import org.danpoong.zipcock_44.domain.user.User;
 import org.danpoong.zipcock_44.global.common.BaseTimeEntity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -25,4 +28,15 @@ public class ChatMessage extends BaseTimeEntity {
 
     @Column(nullable = false)
     private String content;
+
+    @OneToMany(mappedBy = "chatMessage", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ChatMessageRead> chatMessageReads = new ArrayList<>();
+
+
+    @Builder
+    public ChatMessage(ChatRoom chatRoom, User sender, String content) {
+        this.chatRoom = chatRoom;
+        this.sender = sender;
+        this.content = content;
+    }
 }
