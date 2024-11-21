@@ -1,11 +1,11 @@
-package org.danpoong.zipcock_44.domain.legaldongcode.service;
+package org.danpoong.zipcock_44.domain.leaseprice.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.danpoong.zipcock_44.domain.legaldongcode.domain.LegalDongCode;
-import org.danpoong.zipcock_44.domain.legaldongcode.dto.LeasePriceRequestDto;
-import org.danpoong.zipcock_44.domain.legaldongcode.dto.LeasePriceResponseDto;
+import org.danpoong.zipcock_44.domain.leaseprice.domain.LegalDongCode;
+import org.danpoong.zipcock_44.domain.leaseprice.dto.LeasePriceRequestDto;
+import org.danpoong.zipcock_44.domain.leaseprice.dto.LeasePriceResponseDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;

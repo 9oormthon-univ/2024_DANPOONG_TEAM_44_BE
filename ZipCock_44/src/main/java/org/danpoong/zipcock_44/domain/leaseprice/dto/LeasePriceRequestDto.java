@@ -1,4 +1,4 @@
-package org.danpoong.zipcock_44.domain.legaldongcode.dto;
+package org.danpoong.zipcock_44.domain.leaseprice.dto;
 
 import lombok.*;
 
