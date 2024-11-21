@@ -24,6 +24,8 @@ public class QPost extends EntityPathBase<Post> {
 
     public final org.danpoong.zipcock_44.global.common.QBaseEntity _super = new org.danpoong.zipcock_44.global.common.QBaseEntity(this);
 
+    public final ListPath<org.danpoong.zipcock_44.domain.chat.entity.ChatRoom, org.danpoong.zipcock_44.domain.chat.entity.QChatRoom> chatRooms = this.<org.danpoong.zipcock_44.domain.chat.entity.ChatRoom, org.danpoong.zipcock_44.domain.chat.entity.QChatRoom>createList("chatRooms", org.danpoong.zipcock_44.domain.chat.entity.ChatRoom.class, org.danpoong.zipcock_44.domain.chat.entity.QChatRoom.class, PathInits.DIRECT2);
+
     public final StringPath content = createString("content");
 
     //inherited

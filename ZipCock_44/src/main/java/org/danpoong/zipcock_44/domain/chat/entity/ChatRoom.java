@@ -34,4 +34,11 @@ public class ChatRoom extends BaseTimeEntity {
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("createdDate ASC")
     private List<ChatMessage> messages = new ArrayList<>();
+
+    @Builder
+    public ChatRoom(Post post, User buyer, User seller) {
+        this.post = post;
+        this.buyer = buyer;
+        this.seller = seller;
+    }
 }

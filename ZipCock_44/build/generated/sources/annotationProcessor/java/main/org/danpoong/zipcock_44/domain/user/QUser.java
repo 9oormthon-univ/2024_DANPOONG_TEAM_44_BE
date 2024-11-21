@@ -22,6 +22,8 @@ public class QUser extends EntityPathBase<User> {
 
     public final org.danpoong.zipcock_44.global.common.QBaseTimeEntity _super = new org.danpoong.zipcock_44.global.common.QBaseTimeEntity(this);
 
+    public final ListPath<org.danpoong.zipcock_44.domain.chat.entity.ChatRoom, org.danpoong.zipcock_44.domain.chat.entity.QChatRoom> buyerChatRooms = this.<org.danpoong.zipcock_44.domain.chat.entity.ChatRoom, org.danpoong.zipcock_44.domain.chat.entity.QChatRoom>createList("buyerChatRooms", org.danpoong.zipcock_44.domain.chat.entity.ChatRoom.class, org.danpoong.zipcock_44.domain.chat.entity.QChatRoom.class, PathInits.DIRECT2);
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdDate = _super.createdDate;
 
@@ -33,6 +35,8 @@ public class QUser extends EntityPathBase<User> {
     public final StringPath name = createString("name");
 
     public final ListPath<org.danpoong.zipcock_44.domain.post.entity.Post, org.danpoong.zipcock_44.domain.post.entity.QPost> posts = this.<org.danpoong.zipcock_44.domain.post.entity.Post, org.danpoong.zipcock_44.domain.post.entity.QPost>createList("posts", org.danpoong.zipcock_44.domain.post.entity.Post.class, org.danpoong.zipcock_44.domain.post.entity.QPost.class, PathInits.DIRECT2);
+
+    public final ListPath<org.danpoong.zipcock_44.domain.chat.entity.ChatRoom, org.danpoong.zipcock_44.domain.chat.entity.QChatRoom> sellerChatRooms = this.<org.danpoong.zipcock_44.domain.chat.entity.ChatRoom, org.danpoong.zipcock_44.domain.chat.entity.QChatRoom>createList("sellerChatRooms", org.danpoong.zipcock_44.domain.chat.entity.ChatRoom.class, org.danpoong.zipcock_44.domain.chat.entity.QChatRoom.class, PathInits.DIRECT2);
 
     public QUser(String variable) {
         super(User.class, forVariable(variable));
