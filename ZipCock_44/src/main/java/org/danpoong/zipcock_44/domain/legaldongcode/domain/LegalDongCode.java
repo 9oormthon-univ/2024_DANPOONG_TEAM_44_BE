@@ -1,4 +1,4 @@
-package org.danpoong.zipcock_44.domain.legaldongcode;
+package org.danpoong.zipcock_44.domain.legaldongcode.domain;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
