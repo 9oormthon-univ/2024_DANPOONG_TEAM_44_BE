@@ -25,4 +25,3 @@ spring:
         format_sql: true
 logging.level:
   org.hibernate.SQL: debug
-
