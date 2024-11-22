@@ -5,7 +5,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.danpoong.zipcock_44.domain.user.User;
+import org.danpoong.zipcock_44.domain.user.entity.User;
 import org.danpoong.zipcock_44.global.common.BaseTimeEntity;
 
 @Entity

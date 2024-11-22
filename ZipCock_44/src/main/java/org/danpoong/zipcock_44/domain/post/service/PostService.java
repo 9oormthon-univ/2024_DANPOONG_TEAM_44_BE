@@ -1,10 +1,9 @@
 package org.danpoong.zipcock_44.domain.post.service;
 
-import org.danpoong.zipcock_44.domain.post.dto.request.PostRequestDTO;
 import org.danpoong.zipcock_44.domain.post.dto.request.PostUpdateRequestDTO;
 import org.danpoong.zipcock_44.domain.post.entity.Post;
 import org.danpoong.zipcock_44.domain.post.repository.PostRepository;
-import org.danpoong.zipcock_44.domain.user.User;
+import org.danpoong.zipcock_44.domain.user.entity.User;
 import org.danpoong.zipcock_44.domain.user.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

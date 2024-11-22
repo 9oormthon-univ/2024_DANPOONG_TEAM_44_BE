@@ -2,9 +2,9 @@ package org.danpoong.zipcock_44.global.security.service;
 
 
 import lombok.Data;
-import org.danpoong.zipcock_44.domain.user.UserRepository;
 import org.danpoong.zipcock_44.domain.user.dto.request.ChangeLocationRequest;
 import org.danpoong.zipcock_44.domain.user.entity.User;
+import org.danpoong.zipcock_44.domain.user.repository.UserRepository;
 import org.danpoong.zipcock_44.global.security.entity.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

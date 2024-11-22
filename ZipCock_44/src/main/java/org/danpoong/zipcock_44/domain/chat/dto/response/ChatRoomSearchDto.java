@@ -37,9 +37,9 @@ public class ChatRoomSearchDto {
     public static ChatRoomSearchDto fromEntity(ChatRoom chatRoom, Long userId) {
         String opponentName;
         if (chatRoom.getBuyer().getId() == (userId)) {
-            opponentName = chatRoom.getSeller().getName(); // 판매자 이름
+            opponentName = chatRoom.getSeller().getUsername(); // 판매자 이름
         } else {
-            opponentName = chatRoom.getBuyer().getName(); // 구매자 이름
+            opponentName = chatRoom.getBuyer().getUsername(); // 구매자 이름
         }
 
         String postTitle = chatRoom.getPost().getTitle();

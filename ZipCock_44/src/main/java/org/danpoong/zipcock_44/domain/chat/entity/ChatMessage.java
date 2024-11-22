@@ -2,7 +2,7 @@ package org.danpoong.zipcock_44.domain.chat.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.danpoong.zipcock_44.domain.user.User;
+import org.danpoong.zipcock_44.domain.user.entity.User;
 import org.danpoong.zipcock_44.global.common.BaseTimeEntity;
 
 import java.util.ArrayList;

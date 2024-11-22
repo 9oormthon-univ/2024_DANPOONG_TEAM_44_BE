@@ -2,7 +2,7 @@ package org.danpoong.zipcock_44.domain.chat.repository;
 
 import org.danpoong.zipcock_44.domain.chat.entity.ChatMessage;
 import org.danpoong.zipcock_44.domain.chat.entity.ChatMessageRead;
-import org.danpoong.zipcock_44.domain.user.User;
+import org.danpoong.zipcock_44.domain.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

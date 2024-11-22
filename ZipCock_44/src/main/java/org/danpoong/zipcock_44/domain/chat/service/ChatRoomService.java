@@ -11,7 +11,7 @@ import org.danpoong.zipcock_44.domain.chat.repository.ChatMessageRepository;
 import org.danpoong.zipcock_44.domain.chat.repository.ChatRoomRepository;
 import org.danpoong.zipcock_44.domain.post.entity.Post;
 import org.danpoong.zipcock_44.domain.post.repository.PostRepository;
-import org.danpoong.zipcock_44.domain.user.User;
+import org.danpoong.zipcock_44.domain.user.entity.User;
 import org.danpoong.zipcock_44.domain.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -93,9 +93,9 @@ public class ChatRoomService {
 
     private String getOpponentName(ChatRoom chatRoom, Long userId) {
         if (chatRoom.getBuyer().getId() == (userId)) {
-            return chatRoom.getSeller().getName();
+            return chatRoom.getSeller().getUsername();
         } else {
-            return chatRoom.getBuyer().getName();
+            return chatRoom.getBuyer().getUsername();
         }
     }
 
