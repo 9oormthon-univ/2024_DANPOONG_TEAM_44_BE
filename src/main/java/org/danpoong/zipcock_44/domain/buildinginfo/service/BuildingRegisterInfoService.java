@@ -19,6 +19,7 @@ import java.util.List;
 public class BuildingRegisterInfoService {
     private static final String API_URI = "https://apis.data.go.kr/1613000/BldRgstHubService/getBrTitleInfo";
     private static final String REQUEST_TYPE = "json";
+    private static final int DEFAULT_PAGE_SIZE = 10;
 
     @Value("${api.building-register-info.key}")
     private String API_KEY;
@@ -36,7 +37,7 @@ public class BuildingRegisterInfoService {
                 "&bun=" + req.getBun() +
                 "&ji=" + req.getJi() +
                 "&_type=" + REQUEST_TYPE +
-                "&numOfRows=" + req.getNumOfRows() +
+                "&numOfRows=" + DEFAULT_PAGE_SIZE +
                 "&pageNo=" + req.getPageNo();
 
         URI uri = URI.create(uriString);
