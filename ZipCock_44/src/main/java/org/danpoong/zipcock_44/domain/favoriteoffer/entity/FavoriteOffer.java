@@ -20,6 +20,9 @@ public class FavoriteOffer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // 별칭
+    private String alias;
+
     // 사용자 엔티티 매핑
 //    private Member member;
 

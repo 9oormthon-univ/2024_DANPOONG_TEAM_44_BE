@@ -11,6 +11,9 @@ import org.danpoong.zipcock_44.domain.favoriteoffer.entity.FavoriteOffer;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FavoriteOfferAddRequestDto {
+    // 별칭
+    private String alias;
+
     // 자치구명
     private String cggNm;
 
@@ -61,6 +64,7 @@ public class FavoriteOfferAddRequestDto {
 
     public FavoriteOffer toEntity() {
         return FavoriteOffer.builder()
+                .alias(this.alias)
                 .cggNm(this.cggNm)
                 .stdgNm(this.stdgNm)
                 .mno(this.mno)
