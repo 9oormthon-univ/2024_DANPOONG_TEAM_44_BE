@@ -1,14 +1,12 @@
 package org.danpoong.zipcock_44.domain.user.controller;
 
-import jakarta.servlet.http.HttpServletResponse;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.danpoong.zipcock_44.domain.user.dto.request.ChangeLocationRequest;
 import org.danpoong.zipcock_44.domain.user.dto.request.SignUpRequest;
 import org.danpoong.zipcock_44.domain.user.dto.response.SignUpResponse;
-import org.danpoong.zipcock_44.domain.user.entity.User;
 import org.danpoong.zipcock_44.domain.user.service.UserService;
-import org.danpoong.zipcock_44.global.dto.KakaoDTO;
 import org.danpoong.zipcock_44.global.jwt.filter.JWTUtil;
 import org.danpoong.zipcock_44.global.security.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,6 +81,5 @@ public class UserController {
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 에러가 발생했습니다.");
         }
-
     }
 }

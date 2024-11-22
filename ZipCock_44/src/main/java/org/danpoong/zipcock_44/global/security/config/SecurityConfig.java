@@ -49,6 +49,7 @@ public class SecurityConfig {
             "/swagger-ui/**",
             "/swagger-resources/**",
             "/v3/api-docs/**",
+            "/v1/user/logout",
             "/api/v1/posts/**",
             "/api/v1/replies/**",
             //"/login",
@@ -107,11 +108,11 @@ public class SecurityConfig {
                 .httpBasic((auth)-> auth.disable()); // http basic 인증 방식 disable
         http
                 .authorizeHttpRequests((auth)->auth // 경로별 인가 작업
-                        .requestMatchers("/login","/signup","/test").permitAll() // 모든 사용자에게 접근 허용
+                        .requestMatchers("/login","/signup","/test","/kakaoLogout").permitAll() // 모든 사용자에게 접근 허용
                         .requestMatchers(allowUrls).permitAll() // 카카오 로그인 URL 접근 허용
                         .requestMatchers("/admin").hasRole("ADMIN") // ADMIN 권한이 있는 사용자만 접근 가능
                         .requestMatchers("/reissue","/getInfo").permitAll() // Refresh로 Access 토큰 재발급 기능 URL
-                        .requestMatchers("/signout","/logout").authenticated() // 회원 탈퇴는 인증된 사용자만 가능
+                        .requestMatchers("/signout","/logout","/kakaoLogout").authenticated() // 회원 탈퇴는 인증된 사용자만 가능
                         .anyRequest().authenticated()); // 나머지 경로는 인증된 사용자만 사용 가능
         http
                 .addFilterBefore(new JWTFilter(jwtUtil),LoginFilterImpl.class);

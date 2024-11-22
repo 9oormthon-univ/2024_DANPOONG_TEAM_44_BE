@@ -1,19 +1,29 @@
 package org.danpoong.zipcock_44.domain.user.service;
 
 import io.netty.handler.codec.http.HttpHeaderValues;
+import jakarta.servlet.http.HttpSession;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.danpoong.zipcock_44.domain.user.UserRepository;
+import org.danpoong.zipcock_44.domain.user.dto.response.KakaoLogoutResponseDTO;
 import org.danpoong.zipcock_44.domain.user.dto.response.KakaoTokenResponseDTO;
 import org.danpoong.zipcock_44.domain.user.dto.response.KakaoUserInfoResponseDTO;
 import org.danpoong.zipcock_44.domain.user.entity.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatusCode;
+import org.springframework.context.annotation.Bean;
+import org.springframework.http.*;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
@@ -28,14 +38,21 @@ public class KakaoService {
     private final String KAUTH_USER_URL_HOST;
     private final String redirect_uri;
     private final UserRepository userRepository;
+    private final RestTemplate restTemplate;
+    private static final Logger log = LoggerFactory.getLogger(KakaoService.class);
+
 
     @Autowired
-    public KakaoService(UserRepository userRepository,@Value("${spring.kakao.redirect}") String redirect_uri,@Value("${spring.kakao.client}") String clientId) {
+    public KakaoService(UserRepository userRepository,@Value("${spring.kakao.redirect}") String redirect_uri,@Value("${spring.kakao.client}") String clientId,RestTemplate restTemplate) {
         KAUTH_TOKEN_URL_HOST ="https://kauth.kakao.com";
         KAUTH_USER_URL_HOST = "https://kapi.kakao.com";
         this.clientId = clientId;
         this.redirect_uri = redirect_uri;
         this.userRepository = userRepository;
+
+        // RestTemplate 직접 생성
+        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+        this.restTemplate = restTemplate;
     }
 
     // 주석 1
@@ -116,8 +133,40 @@ public class KakaoService {
         return userRepository.save(user);
     }
 
+    public ResponseEntity<String> logout(String accessToken) {
+        // 현재 로그인된 사용자 정보 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            log.warn("Unauthorized logout attempt");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("User is not authenticated. Please log in.");
+        }
 
+        String username = authentication.getName();
+        log.info("Logout request received for user: {}", username);
 
+        try {
+            WebClient webClient = WebClient.create(KAUTH_USER_URL_HOST);
+            KakaoLogoutResponseDTO response = webClient.post()
+                    .uri("/v1/user/logout")
+                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                    .retrieve()
+                    .onStatus(HttpStatusCode::isError, clientResponse -> Mono.error(new RuntimeException("Kakao API error")))
+                    .bodyToMono(KakaoLogoutResponseDTO.class)
+                    .block();
 
-
+            log.info("Kakao logout successful: {}", response);
+            return ResponseEntity.ok("Logout successful");
+        } catch (Exception e) {
+            log.error("Error during Kakao logout: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error during Kakao logout: " + e.getMessage());
+        }
+    }
 }
+
+
+
+
+
+
