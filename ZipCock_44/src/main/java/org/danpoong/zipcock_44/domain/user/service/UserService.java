@@ -2,10 +2,10 @@ package org.danpoong.zipcock_44.domain.user.service;
 
 
 import lombok.Data;
-import org.danpoong.zipcock_44.domain.user.UserRepository;
 import org.danpoong.zipcock_44.domain.user.dto.request.SignUpRequest;
 import org.danpoong.zipcock_44.domain.user.dto.response.SignUpResponse;
 import org.danpoong.zipcock_44.domain.user.entity.User;
+import org.danpoong.zipcock_44.domain.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;

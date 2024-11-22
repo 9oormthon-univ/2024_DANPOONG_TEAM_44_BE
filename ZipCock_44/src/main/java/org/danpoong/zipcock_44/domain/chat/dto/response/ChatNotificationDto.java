@@ -27,7 +27,7 @@ public class ChatNotificationDto {
                 .messageId(chatMessage.getId())
                 .chatRoomId(chatMessage.getChatRoom().getId())
                 .senderId(chatMessage.getSender().getId())
-                .senderName(chatMessage.getSender().getName())
+                .senderName(chatMessage.getSender().getUsername())
                 .content(chatMessage.getContent())
                 .timestamp(chatMessage.getCreatedDate().toString())
                 .build();

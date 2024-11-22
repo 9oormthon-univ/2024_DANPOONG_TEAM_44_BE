@@ -26,8 +26,8 @@ public class ChatRoomDto {
                 .buyerId(chatRoom.getBuyer().getId())
                 .sellerId(chatRoom.getSeller().getId())
                 .postTitle(chatRoom.getPost().getTitle())
-                .buyerName(chatRoom.getBuyer().getName())
-                .sellerName(chatRoom.getSeller().getName())
+                .buyerName(chatRoom.getBuyer().getUsername())
+                .sellerName(chatRoom.getSeller().getUsername())
                 .createdAt(chatRoom.getCreatedDate())
                 .build();
     }

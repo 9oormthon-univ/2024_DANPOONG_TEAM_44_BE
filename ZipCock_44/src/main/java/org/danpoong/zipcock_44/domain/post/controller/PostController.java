@@ -61,7 +61,7 @@ public class PostController {
                     .title(post.getTitle())
                     .id(post.getId())
                     .content(post.getContent())
-                    .authorName(post.getUser().getName()) // 작성자 이름
+                    .authorName(post.getUser().getUsername()) // 작성자 이름
                     .createdDate(post.getCreatedDate()) // 작성 날짜
                     .image(PostSearchResponseDTO.ImageDTO.builder()
                             .fileName(representativeImage.getFileName()) // 파일 이름
@@ -94,7 +94,7 @@ public class PostController {
                 .id(post.getId())
                 .title(post.getTitle())
                 .content(post.getContent())
-                .authorName(post.getUser().getName()) // 작성자 이름
+                .authorName(post.getUser().getUsername()) // 작성자 이름
                 .authorId(post.getUser().getId())
                 .createdDate(post.getCreatedDate()) // 작성일
                 .representativeImageFileName(representativeImage.getFileName())
@@ -129,7 +129,7 @@ public class PostController {
                     .title(post.getTitle())
                     .id(post.getId())
                     .content(post.getContent())
-                    .authorName(post.getUser().getName()) // 작성자 이름
+                    .authorName(post.getUser().getUsername()) // 작성자 이름
                     .createdDate(post.getCreatedDate()) // 작성 날짜
                     .image(PostSearchResponseDTO.ImageDTO.builder()
                             .fileName(representativeImage.getFileName()) // 파일 이름
@@ -175,7 +175,7 @@ public class PostController {
                     .title(post.getTitle())
                     .id(post.getId())
                     .content(post.getContent())
-                    .authorName(post.getUser().getName())
+                    .authorName(post.getUser().getUsername())
                     .createdDate(post.getCreatedDate())
                     .image(PostSearchResponseDTO.ImageDTO.builder()
                             .fileName(representativeImage.getFileName())

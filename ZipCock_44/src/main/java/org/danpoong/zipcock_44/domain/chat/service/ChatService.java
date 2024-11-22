@@ -10,7 +10,7 @@ import org.danpoong.zipcock_44.domain.chat.entity.ChatRoom;
 import org.danpoong.zipcock_44.domain.chat.repository.ChatMessageReadRepository;
 import org.danpoong.zipcock_44.domain.chat.repository.ChatMessageRepository;
 import org.danpoong.zipcock_44.domain.chat.repository.ChatRoomRepository;
-import org.danpoong.zipcock_44.domain.user.User;
+import org.danpoong.zipcock_44.domain.user.entity.User;
 import org.danpoong.zipcock_44.domain.user.repository.UserRepository;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;

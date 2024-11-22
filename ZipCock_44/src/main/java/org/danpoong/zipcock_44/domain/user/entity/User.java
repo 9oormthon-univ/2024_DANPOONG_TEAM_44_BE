@@ -2,7 +2,12 @@ package org.danpoong.zipcock_44.domain.user.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.danpoong.zipcock_44.domain.chat.entity.ChatRoom;
+import org.danpoong.zipcock_44.domain.post.entity.Post;
 import org.danpoong.zipcock_44.global.common.BaseTimeEntity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -39,6 +44,15 @@ public class User extends BaseTimeEntity {
 
     @Column(name = "role")
     private String role; // SpringSecurity 권한
+
+    @OneToMany(mappedBy = "user")
+    private List<Post> posts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "buyer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ChatRoom> buyerChatRooms = new ArrayList<>();
+
+    @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ChatRoom> sellerChatRooms = new ArrayList<>();
 
     @Builder
     public User(String loginId,String username,String password,String sido,String sigungu,String roadname,String email,String role){

@@ -22,7 +22,7 @@ public class ChatMessageDto {
         dto.setId(chatMessage.getId());
         dto.setChatRoomId(chatMessage.getChatRoom().getId());
         dto.setSenderId(chatMessage.getSender().getId());
-        dto.setSenderName(chatMessage.getSender().getName());
+        dto.setSenderName(chatMessage.getSender().getUsername());
         dto.setContent(chatMessage.getContent());
         dto.setCreatedDate(chatMessage.getCreatedDate());
         return dto;
