@@ -32,9 +32,13 @@ public class LeasePriceService {
 
         log.info("Sending Request to OpenAPI Server...");
 
+        int pageNo = Integer.parseInt(req.getPageNo());
+        int startIndex = (pageNo - 1) * 10 + 1;
+        int endIndex = pageNo * 10;
+
         String url = UriComponentsBuilder.fromHttpUrl(API_URI)
-                .pathSegment(API_KEY, TYPE, SERVICE_ID, req.getStartIndex(),
-                        req.getEndIndex(), req.getRcptYr(), cggCd, BLANK,
+                .pathSegment(API_KEY, TYPE, SERVICE_ID, String.valueOf(startIndex),
+                        String.valueOf(endIndex), req.getRcptYr(), cggCd, BLANK,
                         stdgCd, BLANK, req.getMno(), req.getSno(), BLANK, BLANK, BLANK)
                 .toUriString();
 

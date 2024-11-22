@@ -8,11 +8,14 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LeasePriceRequestDto {
-    // 요청시작위치 (정수 입력, 데이터 행 시작번호)
-    private String startIndex;
+//    // 요청시작위치 (정수 입력, 데이터 행 시작번호)
+//    private String startIndex;
+//
+//    // 요청종료위치 (정수 입력, 데이터 행 끝번호)
+//    private String endIndex;
 
-    // 요청종료위치 (정수 입력, 데이터 행 끝번호)
-    private String endIndex;
+    // 요청할 페이지 번호
+    private String pageNo;
 
     // 접수연도 (YYYY)
     private String rcptYr;
