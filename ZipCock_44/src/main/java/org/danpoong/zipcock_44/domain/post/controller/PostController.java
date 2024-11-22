@@ -95,9 +95,12 @@ public class PostController {
                 .title(post.getTitle())
                 .content(post.getContent())
                 .authorName(post.getUser().getName()) // 작성자 이름
+                .authorId(post.getUser().getId())
                 .createdDate(post.getCreatedDate()) // 작성일
                 .representativeImageFileName(representativeImage.getFileName())
                 .representativeImageFileData(Base64.getEncoder().encodeToString(representativeImage.getImageData())) // Base64 인코딩된 데이터
+                .latitude(post.getLatitude())
+                .longitude(post.getLongitude())
                 .imageFileNames(otherImages.stream()
                         .map(Image::getFileName) // 파일명 리스트
                         .toList())
