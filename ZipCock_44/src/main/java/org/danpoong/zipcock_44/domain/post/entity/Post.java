@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.danpoong.zipcock_44.domain.chat.entity.ChatRoom;
 import org.danpoong.zipcock_44.domain.user.User;
 import org.danpoong.zipcock_44.global.common.BaseEntity;
 
@@ -40,6 +41,8 @@ public class Post extends BaseEntity {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Image> images = new ArrayList<>();
 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ChatRoom> chatRooms = new ArrayList<>();
     public Post(User user, String title, String content, double latitude, double longitude) {
         this.user = user;
         this.title = title;
