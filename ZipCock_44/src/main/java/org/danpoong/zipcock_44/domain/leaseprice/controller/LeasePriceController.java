@@ -16,7 +16,7 @@ import java.util.List;
 public class LeasePriceController {
     private final LeasePriceService leasePriceService;
 
-    @GetMapping("/lease")
+    @GetMapping("/lease-price")
     public ApiResponse<List<LeasePriceResponseDto>> getLeasePrice(@ModelAttribute LeasePriceRequestDto req) {
         return ApiResponse.ok(leasePriceService.getLeasePriceData(req));
     }
