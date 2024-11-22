@@ -53,7 +53,10 @@ public class SecurityConfig {
             "/api/v1/posts/**",
             "/api/v1/replies/**",
             //"/login",
-            "/auth/login/kakao/**"
+            "/auth/login/kakao/**",
+            "/building-info/**",
+            "/lease-price/**",
+            "/favorite-offer/**"
     };
 
     @Bean
