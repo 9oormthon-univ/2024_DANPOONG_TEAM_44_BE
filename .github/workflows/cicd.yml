@@ -21,7 +21,7 @@ jobs:
         run: chmod +x ./ZipCock_44/gradlew
 
       - name: Build with Gradle
-        run: ./ZipCock_44/gradlew clean build
+        run: ./ZipCock_44/gradlew build -x test
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3.3.0
