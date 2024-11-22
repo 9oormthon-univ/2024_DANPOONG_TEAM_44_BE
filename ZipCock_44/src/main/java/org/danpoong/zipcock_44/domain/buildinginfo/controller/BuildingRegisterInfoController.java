@@ -16,7 +16,7 @@ import java.util.List;
 public class BuildingRegisterInfoController {
     private final BuildingRegisterInfoService buildingRegisterInfoService;
 
-    @GetMapping("/building")
+    @GetMapping("/building-info")
     public ApiResponse<List<BuildingInfoResponseDto>> getBuildingInfo(@ModelAttribute BuildingInfoRequestDto req) {
         return ApiResponse.ok(buildingRegisterInfoService.getBuildingInfoData(req));
     }
