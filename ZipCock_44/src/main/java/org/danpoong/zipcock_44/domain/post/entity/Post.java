@@ -43,7 +43,6 @@ public class Post extends BaseEntity {
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChatRoom> chatRooms = new ArrayList<>();
-
     public Post(User user, String title, String content, double latitude, double longitude) {
         this.user = user;
         this.title = title;
