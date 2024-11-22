@@ -27,5 +27,7 @@ logging.level:
   org.hibernate.SQL: debug
 
 api:
+  building-register-info:
+    key: ${API_KEY_BUILDING_INFO}
   lease-price:
     key: ${API_KEY_LEASE_PRICE}
