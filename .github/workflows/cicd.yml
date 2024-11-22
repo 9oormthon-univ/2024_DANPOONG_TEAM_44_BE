@@ -17,10 +17,10 @@ jobs:
           distribution: 'adopt'
           java-version: '21'
 
-      - name: create .yml
-        run: |
-          mkdir src/main/resources
-          echo "${{ secrets.APPLICATION }}" > src/main/resources/application.yml
+      # - name: setup .yml
+      #   run: |
+      #     mkdir src/main/resources
+      #     echo "${{ secrets.APPLICATION }}" > src/main/resources/application.yml
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -52,7 +52,9 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_KEY }}
           script: |
+            cd ~/zipcock
+            echo "${{ secrets.ENV }}" > .env
             docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE_NAME }}:latest
             docker stop ${{ secrets.DOCKER_IMAGE_NAME }} && docker rm ${{ secrets.DOCKER_IMAGE_NAME }}
-            docker run --name ${{ secrets.DOCKER_IMAGE_NAME }} -d -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE_NAME }}:latest
+            docker run --name ${{ secrets.DOCKER_IMAGE_NAME }} --env-file ~/zipcock/.env -d -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE_NAME }}:latest
             docker image prune -f
