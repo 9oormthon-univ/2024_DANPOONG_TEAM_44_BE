@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.danpoong.zipcock_44.global.common.BaseTimeEntity;
 import org.danpoong.zipcock_44.domain.chat.entity.ChatRoom;
 import org.danpoong.zipcock_44.domain.post.entity.Post;
 import org.danpoong.zipcock_44.global.common.BaseTimeEntity;
