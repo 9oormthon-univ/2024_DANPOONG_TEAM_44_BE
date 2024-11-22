@@ -26,3 +26,6 @@ spring:
 logging.level:
   org.hibernate.SQL: debug
 
+api:
+  lease-price:
+    key: ${API_KEY_LEASE_PRICE}
