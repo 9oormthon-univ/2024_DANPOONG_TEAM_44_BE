@@ -29,13 +29,16 @@ public class BuildingRegisterInfoService {
         String cggCd = codeByAddress.substring(0, 5); // 시군구코드
         String stdgCd = codeByAddress.substring(5, 10); // 법정동코드
 
+        String bun = String.format("%04d", Integer.parseInt(req.getBun()));
+        String ji = String.format("%04d", Integer.parseInt(req.getJi()));
+
         log.info("Sending Request to OpenAPI Server...");
 
         String uriString = API_URI + "?serviceKey=" + API_KEY +
                 "&sigunguCd=" + cggCd +
                 "&bjdongCd=" + stdgCd +
-                "&bun=" + req.getBun() +
-                "&ji=" + req.getJi() +
+                "&bun=" + bun +
+                "&ji=" + ji +
                 "&_type=" + REQUEST_TYPE +
                 "&numOfRows=" + DEFAULT_PAGE_SIZE +
                 "&pageNo=" + req.getPageNo();
