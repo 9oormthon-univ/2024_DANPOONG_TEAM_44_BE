@@ -1,5 +1,6 @@
 package org.danpoong.zipcock_44.domain.buildinginfo.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,33 +11,33 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BuildingInfoResponseDto {
-    // 전유부 생성일자
+    @Schema(description = "전유부 생성일자")
     private String crtnDay;
 
-    // 건축면적
-    private int archArea; // m^2
+    @Schema(description = "건축면적 (m^2)")
+    private int archArea;
 
-    // 주 용도 코드명
+    @Schema(description = "주 용도 코드명")
     private String mainPurpsCdNm;
 
-    // 기타 용도
+    @Schema(description = "기타 용도")
     private String etcPurps;
 
-    // 세대수
+    @Schema(description = "세대수")
     private int hhldCnt;
 
-    // 가구 수
+    @Schema(description = "가구 수")
     private int fmlyCnt;
 
-    // 대지 위치
+    @Schema(description = "대지 위치")
     private String platPlc;
 
-    // 관리 건축물 대장 PK
+    @Schema(description = "관리 건축물 대장 PK")
     private String mgmBldrgstPk;
 
-    // 도로명 대지위
+    @Schema(description = "도로명 대지위")
     private String newPlatPlc;
 
-    // 건물명
+    @Schema(description = "건물명")
     private String bldNm;
 }
