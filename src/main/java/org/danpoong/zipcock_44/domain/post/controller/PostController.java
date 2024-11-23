@@ -181,6 +181,7 @@ public class PostController {
                     .orElseThrow(() -> new IllegalStateException("Representative image not found for post id: " + post.getId()));
 
             return PostSearchResponseDTO.builder()
+                    .id(post.getId())
                     .title(post.getTitle())
                     .username(post.getUser().getUsername())
                     .content(post.getContent())
