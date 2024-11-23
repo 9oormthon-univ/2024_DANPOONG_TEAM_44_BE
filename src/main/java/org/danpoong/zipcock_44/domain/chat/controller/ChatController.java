@@ -40,7 +40,7 @@ public class ChatController {
 
     @MessageMapping("/arrive/message")
     public void arriveMessage(ChatRoomArriveMessageDTO dto){
-        chatMessageService.isReadMessage(dto.getChatMessageId());
+        chatMessageService.isReadMessage(dto.getChatMessageReadId());
     }
 
     @MessageMapping("/chat/sendMessage")

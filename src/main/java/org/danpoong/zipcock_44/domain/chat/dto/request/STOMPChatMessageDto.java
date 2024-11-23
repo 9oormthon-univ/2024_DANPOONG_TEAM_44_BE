@@ -18,10 +18,8 @@ import java.util.List;
 public class STOMPChatMessageDto {
 
     private Long chatRoomId;
-
     private String senderUsername;
     private String receiveUsername;
-
     private String content;
 
     public List<HashMap<String, String>> list = new ArrayList<>();

@@ -5,6 +5,6 @@ import lombok.Getter;
 @Getter
 public class ChatRoomArriveMessageDTO {
     private Long roomId;
-    private Long chatMessageId;
+    private Long chatMessageReadId;
 
 }
