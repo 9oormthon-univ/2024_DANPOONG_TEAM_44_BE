@@ -2,6 +2,7 @@ package org.danpoong.zipcock_44.global.config;
 
 import lombok.AllArgsConstructor;
 import org.danpoong.zipcock_44.global.interceptor.JwtChannelInterceptor;
+import org.danpoong.zipcock_44.global.interceptor.JwtHandshakeInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -14,14 +15,20 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @AllArgsConstructor
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
+    private final JwtHandshakeInterceptor jwtHandshakeInterceptor;
     private final JwtChannelInterceptor jwtChannelInterceptor;
 
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         // WebSocket 연결을 위한 엔드포인트 설정
+//        registry.addEndpoint("/chatting")
+//                .setAllowedOriginPatterns("*")
+//                .withSockJS();
+
         registry.addEndpoint("/chatting")
-                .setAllowedOriginPatterns("*");  // CORS 허용
+                .addInterceptors(jwtHandshakeInterceptor)
+                .setAllowedOrigins("*");
     }
 
     @Override
@@ -35,4 +42,5 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void configureClientInboundChannel(ChannelRegistration registration) {
         registration.interceptors(jwtChannelInterceptor); // STOMP 인증 인터셉터
     }
+
 }
