@@ -8,7 +8,6 @@ import java.util.List;
 @Getter
 @Setter
 public class PostRequestDTO {
-    private Long userId;
     private String title;
     private String content;
     private double latitude;

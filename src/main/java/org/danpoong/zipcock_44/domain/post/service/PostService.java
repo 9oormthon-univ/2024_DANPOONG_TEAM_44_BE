@@ -61,13 +61,13 @@ public class PostService {
     }
 
     @Transactional
-    public Post updatePost(PostUpdateRequestDTO requestDTO) {
+    public Post updatePost(PostUpdateRequestDTO requestDTO, long userId) {
         // 게시글 조회
         Post post = postRepository.findById(requestDTO.getPostId())
                 .orElseThrow(() -> new IllegalArgumentException("Post not found with id: " + requestDTO.getPostId()));
 
         // 작성자 검증
-        if (!(post.getUser().getId() == requestDTO.getUserId())) {
+        if (!(post.getUser().getId() == userId)) {
             throw new SecurityException("You do not have permission to modify this post.");
         }
 
