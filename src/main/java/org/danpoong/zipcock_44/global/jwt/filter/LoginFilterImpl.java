@@ -88,7 +88,7 @@ public class LoginFilterImpl extends UsernamePasswordAuthenticationFilter{
         String role = auth.getAuthority();
 
         // Access 토큰과 Refresh 토큰 생성
-        String access = jwtUtil.createJwt("access", username, role, 600000L); // Access 토큰
+        String access = jwtUtil.createJwt("access", username, role, 3600000L); // Access 토큰
         String refresh = jwtUtil.createJwt("refresh", username, role, 86400000L); // Refresh 토큰
 
         // Refresh 토큰 저장
