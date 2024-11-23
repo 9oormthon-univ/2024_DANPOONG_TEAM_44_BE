@@ -30,6 +30,9 @@ public class LeasePriceService {
         String cggCd = codeByAddress.substring(0, 5); // 시군구코드
         String stdgCd = codeByAddress.substring(5, 10); // 법정동코드
 
+        String mno = String.format("%04d", Integer.parseInt(req.getMno()));
+        String sno = String.format("%04d", Integer.parseInt(req.getSno()));
+
         log.info("Sending Request to OpenAPI Server...");
 
         int pageNo = Integer.parseInt(req.getPageNo());
@@ -39,7 +42,7 @@ public class LeasePriceService {
         String url = UriComponentsBuilder.fromHttpUrl(API_URI)
                 .pathSegment(API_KEY, TYPE, SERVICE_ID, String.valueOf(startIndex),
                         String.valueOf(endIndex), req.getRcptYr(), cggCd, BLANK,
-                        stdgCd, BLANK, req.getMno(), req.getSno(), BLANK, BLANK, BLANK)
+                        stdgCd, BLANK, mno, sno, BLANK, BLANK, BLANK)
                 .toUriString();
 
         RestTemplate restTemplate = new RestTemplate();
