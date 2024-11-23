@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.danpoong.zipcock_44.domain.favoriteoffer.entity.FavoriteOffer;
+import org.danpoong.zipcock_44.domain.user.entity.User;
 
 @Getter
 @Builder
@@ -62,9 +63,10 @@ public class FavoriteOfferAddRequestDto {
     // 종전 임대료 (만원 단위)
     private String bfrRtfe;
 
-    public FavoriteOffer toEntity() {
+    public FavoriteOffer toEntity(User user) {
         return FavoriteOffer.builder()
                 .alias(this.alias)
+                .user(user)
                 .cggNm(this.cggNm)
                 .stdgNm(this.stdgNm)
                 .mno(this.mno)
