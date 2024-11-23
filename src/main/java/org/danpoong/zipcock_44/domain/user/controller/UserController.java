@@ -7,12 +7,15 @@ import org.danpoong.zipcock_44.domain.user.dto.request.ChangeLocationRequest;
 import org.danpoong.zipcock_44.domain.user.dto.request.SignUpRequest;
 import org.danpoong.zipcock_44.domain.user.dto.response.SignUpResponse;
 import org.danpoong.zipcock_44.domain.user.service.UserService;
+import org.danpoong.zipcock_44.global.common.response.ApiResponse;
 import org.danpoong.zipcock_44.global.jwt.filter.JWTUtil;
 import org.danpoong.zipcock_44.global.security.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -34,6 +37,16 @@ public class UserController {
     public ResponseEntity<SignUpResponse> signUp(@RequestBody SignUpRequest signUpRequest) throws Exception{
         SignUpResponse signUpResponse = userService.signUp(signUpRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(signUpResponse);
+    }
+
+    @PostMapping("/check-email")
+    public ApiResponse<Boolean> checkIfEmailDuplicated(@RequestBody Map<String, String> req) {
+        return ApiResponse.ok(userService.checkIfEmailDuplicated(req));
+    }
+
+    @PostMapping("/check-username")
+    public ApiResponse<Boolean> checkIfUsernameDuplicated(@RequestBody Map<String, String> req) {
+        return ApiResponse.ok(userService.checkIfUsernameDuplicated(req));
     }
 
     // 회원 탈퇴 메소드

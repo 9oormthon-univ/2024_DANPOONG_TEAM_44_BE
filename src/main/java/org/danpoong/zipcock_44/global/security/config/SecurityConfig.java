@@ -119,7 +119,7 @@ public class SecurityConfig {
                 .httpBasic((auth)-> auth.disable()); // http basic 인증 방식 disable
         http
                 .authorizeHttpRequests((auth)->auth // 경로별 인가 작업
-                        .requestMatchers("/login","/signup","/test","/kakaoLogout").permitAll() // 모든 사용자에게 접근 허용
+                        .requestMatchers("/login","/signup","/test","/kakaoLogout", "/check-email", "/check-username").permitAll() // 모든 사용자에게 접근 허용
                         .requestMatchers(allowUrls).permitAll() // 카카오 로그인 URL 접근 허용
                         .requestMatchers("/admin").hasRole("ADMIN") // ADMIN 권한이 있는 사용자만 접근 가능
                         .requestMatchers("/reissue","/getInfo").permitAll() // Refresh로 Access 토큰 재발급 기능 URL

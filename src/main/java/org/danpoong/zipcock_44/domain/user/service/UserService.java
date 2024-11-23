@@ -6,11 +6,15 @@ import org.danpoong.zipcock_44.domain.user.dto.request.SignUpRequest;
 import org.danpoong.zipcock_44.domain.user.dto.response.SignUpResponse;
 import org.danpoong.zipcock_44.domain.user.entity.User;
 import org.danpoong.zipcock_44.domain.user.repository.UserRepository;
+import org.danpoong.zipcock_44.global.common.code.ErrorCode;
+import org.danpoong.zipcock_44.global.common.response.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Map;
 
 
 @Data
@@ -27,16 +31,14 @@ public class UserService {
 
     @Transactional
     public SignUpResponse signUp(SignUpRequest signUpRequest) throws Exception {
-
-
         // 이메일 중복 체크
         if (userRepository.findByEmail(signUpRequest.getEmail()).isPresent()) {
-            throw new RuntimeException("해당 이메일은 이미 존재합니다.");
+            throw new CustomException(ErrorCode.EMAIL_DUPLICATED);
         }
 
         // 비밀번호 검증: null 또는 빈 값일 경우 예외 처리
         if (signUpRequest.getPassword() == null || signUpRequest.getPassword().isEmpty()) {
-            throw new IllegalArgumentException("비밀번호는 필수 항목입니다.");
+            throw new CustomException(ErrorCode.PASSWORD_REQUIRED);
         }
 
         String encodedPassword = bCryptPasswordEncoder.encode(signUpRequest.getPassword());
@@ -68,5 +70,12 @@ public class UserService {
                 .build();
     }
 
+    public boolean checkIfEmailDuplicated(Map<String, String> req) {
+        return userRepository.existsByEmail(req.get("email"));
+    }
+
+    public boolean checkIfUsernameDuplicated(Map<String, String> req) {
+        return userRepository.existsByUsername(req.get("username"));
+    }
 
 }
