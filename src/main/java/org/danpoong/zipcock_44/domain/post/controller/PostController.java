@@ -47,7 +47,7 @@ public class PostController {
                 .isRepresentative(true)
                 .build();
 
-        Post post = postService.createPostWithJson(user.getId(), dto.getContent(), images, dto.getTitle(), dto.getLatitude(), dto.getLongitude(), representativeImage);
+        Post post = postService.createPostWithJson(user.getId(), dto.getContent(), images, dto.getTitle(), dto.getLatitude(), dto.getLongitude(), representativeImage, dto.getDomain());
         return ApiResponse.ok(null);
     }
 
@@ -67,6 +67,7 @@ public class PostController {
                     .content(post.getContent())
                     .authorName(post.getUser().getUsername()) // 작성자 이름
                     .createdDate(post.getCreatedDate()) // 작성 날짜
+                    .domain(post.getDomain())
                     .image(PostSearchResponseDTO.ImageDTO.builder()
                             .fileName(representativeImage.getFileName()) // 파일 이름
                             .fileData(Base64.getEncoder().encodeToString(representativeImage.getImageData())) // Base64 인코딩된 데이터
@@ -105,6 +106,7 @@ public class PostController {
                 .representativeImageFileData(Base64.getEncoder().encodeToString(representativeImage.getImageData())) // Base64 인코딩된 데이터
                 .latitude(post.getLatitude())
                 .longitude(post.getLongitude())
+                .domain(post.getDomain())
                 .imageFileNames(otherImages.stream()
                         .map(Image::getFileName) // 파일명 리스트
                         .toList())
@@ -133,6 +135,7 @@ public class PostController {
                     .title(post.getTitle())
                     .id(post.getId())
                     .content(post.getContent())
+                    .domain(post.getDomain())
                     .authorName(post.getUser().getUsername()) // 작성자 이름
                     .createdDate(post.getCreatedDate()) // 작성 날짜
                     .image(PostSearchResponseDTO.ImageDTO.builder()
@@ -179,10 +182,11 @@ public class PostController {
 
             return PostSearchResponseDTO.builder()
                     .title(post.getTitle())
-                    .id(post.getId())
+                    .username(post.getUser().getUsername())
                     .content(post.getContent())
                     .authorName(post.getUser().getUsername())
                     .createdDate(post.getCreatedDate())
+                    .domain(post.getDomain())
                     .image(PostSearchResponseDTO.ImageDTO.builder()
                             .fileName(representativeImage.getFileName())
                             .fileData(Base64.getEncoder().encodeToString(representativeImage.getImageData()))

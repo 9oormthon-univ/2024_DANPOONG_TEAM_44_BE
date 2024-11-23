@@ -8,9 +8,11 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 public class PostSearchResponseDTO {
-    private Long id;
+    private long id;
+    private String username;
     private String title;
     private String content;
+    private String domain;
     private String authorName; // 작성자 이름 추가
     private LocalDateTime createdDate; // 작성 날짜 추가
     private ImageDTO image; // 이미지 정보 리스트
