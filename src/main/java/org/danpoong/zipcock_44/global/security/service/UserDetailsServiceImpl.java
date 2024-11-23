@@ -3,6 +3,7 @@ package org.danpoong.zipcock_44.global.security.service;
 
 import lombok.Data;
 import org.danpoong.zipcock_44.domain.user.dto.request.ChangeLocationRequest;
+import org.danpoong.zipcock_44.domain.user.dto.response.MypageInfoResponseDTO;
 import org.danpoong.zipcock_44.domain.user.entity.User;
 import org.danpoong.zipcock_44.domain.user.repository.UserRepository;
 import org.danpoong.zipcock_44.global.security.entity.UserDetailsImpl;
@@ -68,6 +69,24 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         userRepository.save(userPatch);
         return ResponseEntity.ok("사용자 위치 정보가 성공적으로 업데이트되었습니다.");
+    }
+
+    public ResponseEntity<?> showInfo(String loginId){
+        Optional<User> user = userRepository.findByLoginId(loginId);
+        if(user.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("해당 로그인 ID를 찾을 수 없습니다 : " + loginId);
+        }
+
+        User savedUser = user.get();
+
+        String username = savedUser.getUsername();
+        String sido = savedUser.getSido();
+        String sigungu = savedUser.getSigungu();
+        String roadname = savedUser.getRoadname();
+
+        MypageInfoResponseDTO responseDTO = new MypageInfoResponseDTO(username,sido,sigungu,roadname);
+        return ResponseEntity.ok(responseDTO);
     }
 
 }

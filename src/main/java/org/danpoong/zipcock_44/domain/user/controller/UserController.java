@@ -82,4 +82,22 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 에러가 발생했습니다.");
         }
     }
+
+    // 마이페이지에서 필요한 사용자 정보 불러오는 메소드 : 2024.11.23 22:43 수정
+    @GetMapping("/userInfo")
+    public ResponseEntity<?> mypageInfo(@RequestHeader("access") String token){
+        try{
+            String loginId = jwtUtil.getLoginId(token);
+            if (loginId == null){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("로그인 ID를 찾을 수 없습니다.");
+            }
+            log.info(loginId);
+
+            return userDetailsServiceImpl.showInfo(token);
+        } catch (RuntimeException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 내부 에러가 발생하였습니다.");
+        }
+    }
 }
