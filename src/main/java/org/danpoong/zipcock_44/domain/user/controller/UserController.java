@@ -64,11 +64,6 @@ public class UserController {
             }
             log.info(loginId);
 
-            // 로그인 ID가 없으면 실패 처리
-            if (loginId == null) {
-                log.info("b");
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("로그인 ID를 찾을 수 없습니다.");
-            }
             // 서비스 호출 -> 바꾸기
             return userDetailsServiceImpl.changeLocation(loginId,request);
         } catch (RuntimeException ex) {
