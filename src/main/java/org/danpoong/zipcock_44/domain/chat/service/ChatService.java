@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.file.AccessDeniedException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,7 +42,7 @@ public class ChatService {
                 .orElseThrow(() -> new EntityNotFoundException("채팅방을 찾을 수 없습니다."));
 
         // 발신자 조회
-        User sender = userRepository.findById(messageDto.getSenderId())
+        User sender = userRepository.findByUsername(messageDto.getSenderUsername())
                 .orElseThrow(() -> new EntityNotFoundException("사용자를 찾을 수 없습니다."));
 
         // 메시지 생성 및 저장
@@ -72,9 +73,14 @@ public class ChatService {
                 .isRead(true) // 발신자는 메시지를 보냈으므로 읽음으로 설정
                 .build();
         chatMessageReadRepository.save(senderRead);
+        Long chatMessageReadId = senderRead.getId();
+        HashMap<String, String> map = new HashMap<>();
+        map.put("chatMessageReadId", String.valueOf(chatMessageReadId));
+        List<HashMap<String, String>> list = messageDto.getList();
+        list.add(map);
 
-        // 메시지 브로드캐스트
-        messagingTemplate.convertAndSend("/topic/chat/room/" + chatRoom.getId(), STOMPChatMessageDto.fromEntity(chatMessage));
+        //특정 유저한테 보내기
+        messagingTemplate.convertAndSendToUser(messageDto.getReceiveUsername(), "/queue/messages",list);
     }
 
     /**
@@ -110,6 +116,8 @@ public class ChatService {
                 .map(ChatMessageDto::fromEntity)
                 .collect(Collectors.toList());
     }
+
+
 
     /**
      * 발신자를 제외한 수신자 조회 (1:1 채팅 assumed)

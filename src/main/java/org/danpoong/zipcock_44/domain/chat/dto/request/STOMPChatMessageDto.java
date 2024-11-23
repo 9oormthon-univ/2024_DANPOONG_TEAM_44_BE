@@ -6,6 +6,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.danpoong.zipcock_44.domain.chat.entity.ChatMessage;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -13,16 +18,17 @@ import org.danpoong.zipcock_44.domain.chat.entity.ChatMessage;
 public class STOMPChatMessageDto {
 
     private Long chatRoomId;
-
-    private Long senderId;
-
+    private String senderUsername;
+    private String receiveUsername;
     private String content;
 
-    public static STOMPChatMessageDto fromEntity(ChatMessage chatMessage) {
-        return STOMPChatMessageDto.builder()
-                .chatRoomId(chatMessage.getChatRoom().getId())
-                .senderId(chatMessage.getSender().getId())
-                .content(chatMessage.getContent())
-                .build();
+    public List<HashMap<String, String>> list = new ArrayList<>();
+
+    public List<HashMap<String, String>> getList() {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("chatRoomId", String.valueOf(chatRoomId));
+        map.put("content", content);
+        list.add(map);
+        return list;
     }
 }
