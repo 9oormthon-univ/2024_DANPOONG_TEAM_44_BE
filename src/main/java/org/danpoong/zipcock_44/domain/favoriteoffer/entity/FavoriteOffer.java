@@ -1,13 +1,12 @@
 package org.danpoong.zipcock_44.domain.favoriteoffer.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.danpoong.zipcock_44.domain.favoriteoffer.dto.FavoriteOfferResponseDto;
+import org.danpoong.zipcock_44.domain.user.entity.User;
 
 @Entity
 @Getter
@@ -24,7 +23,9 @@ public class FavoriteOffer {
     private String alias;
 
     // 사용자 엔티티 매핑
-//    private Member member;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     // 자치구명
     private String cggNm;
@@ -73,4 +74,27 @@ public class FavoriteOffer {
 
     // 종전 임대료 (만원 단위)
     private String bfrRtfe;
+
+    public FavoriteOfferResponseDto toResponseDto() {
+        return FavoriteOfferResponseDto.builder()
+                .id(this.id)
+                .alias(this.alias)
+                .userId(this.user.getId())
+                .cggNm(this.cggNm)
+                .stdgNm(this.stdgNm)
+                .mno(this.mno)
+                .sno(this.sno)
+                .ctrtDay(this.ctrtDay)
+                .rentSe(this.rentSe)
+                .rentArea(this.rentArea)
+                .grfe(this.grfe)
+                .rtfe(this.rtfe)
+                .bldgNm(this.bldgNm)
+                .archYr(this.archYr)
+                .ctrtPrd(this.ctrtPrd)
+                .newUpdtYn(this.newUpdtYn)
+                .bfrGrfe(this.bfrGrfe)
+                .bfrRtfe(this.bfrRtfe)
+                .build();
+    }
 }
