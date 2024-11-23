@@ -41,7 +41,7 @@ public class ChatService {
                 .orElseThrow(() -> new EntityNotFoundException("채팅방을 찾을 수 없습니다."));
 
         // 발신자 조회
-        User sender = userRepository.findById(messageDto.getSenderId())
+        User sender = userRepository.findByUsername(messageDto.getSenderUsername())
                 .orElseThrow(() -> new EntityNotFoundException("사용자를 찾을 수 없습니다."));
 
         // 메시지 생성 및 저장
@@ -73,8 +73,8 @@ public class ChatService {
                 .build();
         chatMessageReadRepository.save(senderRead);
 
-        // 메시지 브로드캐스트
-        messagingTemplate.convertAndSend("/topic/chat/room/" + chatRoom.getId(), STOMPChatMessageDto.fromEntity(chatMessage));
+        //특정 유저한테 보내기
+        messagingTemplate.convertAndSendToUser(messageDto.getReceiveUsername(), "/queue/messages",messageDto.getList());
     }
 
     /**
@@ -110,6 +110,8 @@ public class ChatService {
                 .map(ChatMessageDto::fromEntity)
                 .collect(Collectors.toList());
     }
+
+
 
     /**
      * 발신자를 제외한 수신자 조회 (1:1 채팅 assumed)

@@ -103,7 +103,7 @@ public class SecurityConfig {
                         // 모든 헤더 허용
                         config.setMaxAge(3600L);
                         // 요청 캐시 시간 설정 -> 1시간
-                        config.setExposedHeaders(Collections.singletonList("Authorization"));
+                        config.setExposedHeaders(Collections.singletonList("*"));
                         // 응답 헤더로 노출할 헤더를 설정
 
                         return config;
@@ -122,6 +122,7 @@ public class SecurityConfig {
                         .requestMatchers("/login","/signup","/test","/kakaoLogout").permitAll() // 모든 사용자에게 접근 허용
                         .requestMatchers(allowUrls).permitAll() // 카카오 로그인 URL 접근 허용
                         .requestMatchers("/admin").hasRole("ADMIN") // ADMIN 권한이 있는 사용자만 접근 가능
+                        .requestMatchers("/chatting","/chatting/**").permitAll()
                         .requestMatchers("/reissue","/getInfo").permitAll() // Refresh로 Access 토큰 재발급 기능 URL
                         .requestMatchers("/signout","/logout","/kakaoLogout").authenticated() // 회원 탈퇴는 인증된 사용자만 가능
                         .anyRequest().authenticated()); // 나머지 경로는 인증된 사용자만 사용 가능

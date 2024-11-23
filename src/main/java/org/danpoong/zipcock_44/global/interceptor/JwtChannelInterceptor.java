@@ -2,6 +2,7 @@ package org.danpoong.zipcock_44.global.interceptor;
 
 import lombok.extern.slf4j.Slf4j;
 import org.danpoong.zipcock_44.global.jwt.filter.JWTUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompCommand;
@@ -20,6 +21,7 @@ public class JwtChannelInterceptor implements ChannelInterceptor {
     private final JWTUtil jwtUtil;
     private final UserDetailsService userDetailsService;
 
+    @Autowired
     public JwtChannelInterceptor(JWTUtil jwtUtil, UserDetailsService userDetailsService) {
         this.jwtUtil = jwtUtil;
         this.userDetailsService = userDetailsService;
@@ -40,9 +42,9 @@ public class JwtChannelInterceptor implements ChannelInterceptor {
                 String token = authToken.substring(7); // "Bearer " 제거
 
                 if (jwtUtil.validateToken(token)) {
-                    String getLoginId = jwtUtil.getLoginId(token);
+                    String userId = jwtUtil.getLoginId(token);
 
-                    UserDetails userDetails = userDetailsService.loadUserByUsername(getLoginId);
+                    UserDetails userDetails = userDetailsService.loadUserByUsername(userId);
 
                     UsernamePasswordAuthenticationToken authentication =
                             new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
@@ -50,12 +52,25 @@ public class JwtChannelInterceptor implements ChannelInterceptor {
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                     accessor.setUser(authentication);
 
-                    log.info("WebSocket authentication successful for user: {}", getLoginId);
+                    // 세션 저장
+                    String sessionId = accessor.getSessionId();
+
+                    log.info("WebSocket authentication successful for user: {}, sessionId: {}", userId, sessionId);
                 } else {
                     log.warn("Invalid JWT token");
                 }
             } else {
                 log.warn("Authorization header missing or does not start with Bearer");
+            }
+        }
+
+        // DISCONNECT 명령어일 때 세션 제거
+        if (StompCommand.DISCONNECT.equals(accessor.getCommand())) {
+            UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) accessor.getUser();
+            if (authentication != null) {
+                String userId = authentication.getName();
+                String sessionId = accessor.getSessionId();
+                log.info("WebSocket disconnected for user: {}, sessionId: {}", userId, sessionId);
             }
         }
 
