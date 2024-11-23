@@ -12,6 +12,12 @@ import lombok.NoArgsConstructor;
 public class FavoriteOfferResponseDto {
     private Long id;
 
+    // 별칭
+    private String alias;
+
+    // 등록한 사용자의 id
+    private Long userId;
+
     // 자치구명
     private String cggNm;
 
