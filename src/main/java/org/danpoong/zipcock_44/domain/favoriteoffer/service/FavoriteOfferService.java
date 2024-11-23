@@ -7,6 +7,8 @@ import org.danpoong.zipcock_44.domain.favoriteoffer.dto.FavoriteOfferResponseDto
 import org.danpoong.zipcock_44.domain.favoriteoffer.entity.FavoriteOffer;
 import org.danpoong.zipcock_44.domain.favoriteoffer.repository.FavoriteOfferRepository;
 import org.danpoong.zipcock_44.domain.user.entity.User;
+import org.danpoong.zipcock_44.global.common.code.ErrorCode;
+import org.danpoong.zipcock_44.global.common.response.CustomException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,10 +29,10 @@ public class FavoriteOfferService {
     @Transactional
     public void deleteFavoriteOffer(Long id, User user) {
         FavoriteOffer favoriteOffer = favoriteOfferRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("정보에 해당하는 응답이 없습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.REQUEST_NOT_VALID));
 
         if (favoriteOffer.getUser() != user)
-            new IllegalArgumentException("사용자가 등록하지 않은 관심 매물은 제거할 수 없습니다.");
+            throw new CustomException(ErrorCode.AUTHORITY_FORBIDDEN);
 
         favoriteOfferRepository.delete(favoriteOffer);
         log.info("Deleted from Favorite List");
@@ -44,7 +46,7 @@ public class FavoriteOfferService {
     public FavoriteOfferResponseDto getFavoriteOfferById(Long id) {
         return favoriteOfferRepository.findById(id).stream()
                 .findFirst().map(FavoriteOffer::toResponseDto)
-                .orElseThrow(() -> new IllegalArgumentException("정보에 해당하는 응답이 없습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.REQUEST_NOT_VALID));
     }
 
 }

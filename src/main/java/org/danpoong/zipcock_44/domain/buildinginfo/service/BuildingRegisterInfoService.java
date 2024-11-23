@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.danpoong.zipcock_44.domain.buildinginfo.dto.BuildingInfoRequestDto;
 import org.danpoong.zipcock_44.domain.buildinginfo.dto.BuildingInfoResponseDto;
 import org.danpoong.zipcock_44.domain.legaldongcode.LegalDongCode;
+import org.danpoong.zipcock_44.global.common.code.ErrorCode;
+import org.danpoong.zipcock_44.global.common.response.CustomException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -61,9 +63,11 @@ public class BuildingRegisterInfoService {
         JSONObject jsonBody = jsonObject.getJSONObject("response").getJSONObject("body");
 
         if (jsonBody.optInt("totalCount") == 0)
-            throw new IllegalArgumentException("요청에 해당하는 정보가 없습니다.");
+            throw new CustomException(ErrorCode.REQUEST_NOT_VALID);
 
         JSONArray responseArray = jsonBody.getJSONObject("items").getJSONArray("item");
+        if (responseArray.isEmpty())
+            throw new CustomException(ErrorCode.EMPTY_PAGE);
 
         List<BuildingInfoResponseDto> responseList = new ArrayList<>();
         responseArray.forEach(item -> {
