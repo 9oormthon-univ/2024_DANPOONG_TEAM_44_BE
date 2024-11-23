@@ -34,8 +34,6 @@ public class PostController {
     @PostMapping
     public ApiResponse<?> createPostWithJson(@RequestBody PostRequestDTO dto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
-        System.out.println("user = " + user.getId());
-
         List<Image> images = dto.getFileData().stream()
                 .map(fileData -> Image.builder()
                         .imageData(Base64.getDecoder().decode(fileData.getFileContent()))
@@ -49,7 +47,7 @@ public class PostController {
                 .isRepresentative(true)
                 .build();
 
-        Post post = postService.createPostWithJson(dto.getUserId(), dto.getContent(), images, dto.getTitle(), dto.getLatitude(), dto.getLongitude(), representativeImage);
+        Post post = postService.createPostWithJson(user.getId(), dto.getContent(), images, dto.getTitle(), dto.getLatitude(), dto.getLongitude(), representativeImage);
         return ApiResponse.ok(null);
     }
 
@@ -149,16 +147,18 @@ public class PostController {
 
 
     //게시글 수정
-    @PutMapping()
-    public ApiResponse<PostIdSearchResponseDTO> updatePost(@RequestBody PostUpdateRequestDTO requestDTO) {
-        postService.updatePost(requestDTO);
+    @PutMapping
+    public ApiResponse<PostIdSearchResponseDTO> updatePost(@RequestBody PostUpdateRequestDTO requestDTO, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
+        postService.updatePost(requestDTO, user.getId());
         return ApiResponse.ok(null);
     }
 
     //게시글 삭제
     @DeleteMapping("/{postId}")
-    public ApiResponse<Void> deletePost(@PathVariable Long postId, @RequestParam Long userId) {
-        postService.deletePost(postId, userId);
+    public ApiResponse<Void> deletePost(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
+        postService.deletePost(postId, user.getId());
         return ApiResponse.ok(null); // 성공 응답
     }
 
