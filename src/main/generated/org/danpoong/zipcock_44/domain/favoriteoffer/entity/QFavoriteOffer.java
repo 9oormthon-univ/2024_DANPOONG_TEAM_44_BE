@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -16,6 +17,8 @@ import com.querydsl.core.types.Path;
 public class QFavoriteOffer extends EntityPathBase<FavoriteOffer> {
 
     private static final long serialVersionUID = 11968693L;
+
+    private static final PathInits INITS = PathInits.DIRECT2;
 
     public static final QFavoriteOffer favoriteOffer = new QFavoriteOffer("favoriteOffer");
 
@@ -55,16 +58,27 @@ public class QFavoriteOffer extends EntityPathBase<FavoriteOffer> {
 
     public final StringPath stdgNm = createString("stdgNm");
 
+    public final org.danpoong.zipcock_44.domain.user.entity.QUser user;
+
     public QFavoriteOffer(String variable) {
-        super(FavoriteOffer.class, forVariable(variable));
+        this(FavoriteOffer.class, forVariable(variable), INITS);
     }
 
     public QFavoriteOffer(Path<? extends FavoriteOffer> path) {
-        super(path.getType(), path.getMetadata());
+        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
     public QFavoriteOffer(PathMetadata metadata) {
-        super(FavoriteOffer.class, metadata);
+        this(metadata, PathInits.getFor(metadata, INITS));
+    }
+
+    public QFavoriteOffer(PathMetadata metadata, PathInits inits) {
+        this(FavoriteOffer.class, metadata, inits);
+    }
+
+    public QFavoriteOffer(Class<? extends FavoriteOffer> type, PathMetadata metadata, PathInits inits) {
+        super(type, metadata, inits);
+        this.user = inits.isInitialized("user") ? new org.danpoong.zipcock_44.domain.user.entity.QUser(forProperty("user")) : null;
     }
 
 }
