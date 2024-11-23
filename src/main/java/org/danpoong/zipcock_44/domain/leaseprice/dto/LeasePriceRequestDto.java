@@ -39,5 +39,5 @@ public class LeasePriceRequestDto {
 //    private String bldgNm;
 
     // 건물용도 (아파트/단독다가구/연립다세대/오피스텔 택1)
-//    private String bldgUsg;
+    private String bldgUsg;
 }
