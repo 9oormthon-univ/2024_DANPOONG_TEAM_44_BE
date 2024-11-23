@@ -93,7 +93,7 @@ public class UserController {
             }
             log.info(loginId);
 
-            return userDetailsServiceImpl.showInfo(token);
+            return userDetailsServiceImpl.showInfo(loginId);
         } catch (RuntimeException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e){
