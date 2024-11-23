@@ -17,6 +17,8 @@ public enum ErrorCode {
     REQUEST_NOT_VALID(400, HttpStatus.BAD_REQUEST, "요청에 해당하는 정보가 없습니다."),
     EMPTY_PAGE(400, HttpStatus.BAD_REQUEST, "빈 페이지입니다."),
     AUTHORITY_FORBIDDEN(400, HttpStatus.BAD_REQUEST, "사용자가 저장한 관심 매물만 제거할 수 있습니다."),
+    EMAIL_DUPLICATED(400, HttpStatus.BAD_REQUEST, "중복된 이메일입니다."),
+    PASSWORD_REQUIRED(400, HttpStatus.BAD_REQUEST, "이메일을 입력해주세요."),
 
     ERROR_WHILE_PARSING_JSON(500, HttpStatus.INTERNAL_SERVER_ERROR, "JSON 파싱 중 오류가 발생했습니다.")
     ;
