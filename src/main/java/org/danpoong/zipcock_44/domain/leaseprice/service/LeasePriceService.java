@@ -45,7 +45,7 @@ public class LeasePriceService {
         String url = UriComponentsBuilder.fromHttpUrl(API_URI)
                 .pathSegment(API_KEY, TYPE, SERVICE_ID, String.valueOf(startIndex),
                         String.valueOf(endIndex), req.getRcptYr(), cggCd, BLANK,
-                        stdgCd, BLANK, mno, sno, BLANK, BLANK, BLANK)
+                        stdgCd, BLANK, mno, sno, BLANK, BLANK, req.getBldgUsg())
                 .toUriString();
 
         RestTemplate restTemplate = new RestTemplate();
