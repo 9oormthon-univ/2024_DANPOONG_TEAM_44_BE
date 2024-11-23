@@ -12,5 +12,5 @@ public class CreateChatRoomRequest {
 
     private Long postId;
 
-    private Long buyerId;
+    private String username;
 }
