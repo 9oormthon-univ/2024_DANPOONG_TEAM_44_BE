@@ -17,6 +17,7 @@ public class PostIdSearchResponseDTO {
     private LocalDateTime createdDate; // 작성일
     private double latitude; // 위도
     private double longitude; // 경도
+    private String domain;
     private String representativeImageFileName;
     private String representativeImageFileData;
     private List<String> imageFileNames; // 이미지 파일명 리스트

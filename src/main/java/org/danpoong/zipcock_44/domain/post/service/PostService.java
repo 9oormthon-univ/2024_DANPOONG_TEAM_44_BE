@@ -28,11 +28,11 @@ public class PostService {
 
 
     @Transactional
-    public Post createPostWithJson(Long userId, String content, List<Image> images, String title, double latitude, double longitude, Image representativeImage) {
+    public Post createPostWithJson(Long userId, String content, List<Image> images, String title, double latitude, double longitude, Image representativeImage, String domain) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        Post post = new Post(user, title, content, latitude, longitude);
+        Post post = new Post(user, title, content, latitude, longitude, domain);
         postRepository.save(post);
 
         post.addImage(representativeImage); // 대표 이미지 추가

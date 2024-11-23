@@ -38,17 +38,21 @@ public class Post extends BaseEntity {
     @Column(nullable = false)
     private double longitude; // 경도
 
+    @Column(nullable = false)
+    private String domain; // 경도
+
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Image> images = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChatRoom> chatRooms = new ArrayList<>();
-    public Post(User user, String title, String content, double latitude, double longitude) {
+    public Post(User user, String title, String content, double latitude, double longitude, String domain) {
         this.user = user;
         this.title = title;
         this.content = content;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.domain = domain;
     }
 
     public void setTitle(String title) {
