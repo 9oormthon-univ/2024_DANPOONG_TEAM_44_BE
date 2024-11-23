@@ -18,7 +18,8 @@ import java.util.List;
 @Table(name = "POST")
 public class Post extends BaseEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_id")
     private long id;
 
@@ -46,6 +47,7 @@ public class Post extends BaseEntity {
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChatRoom> chatRooms = new ArrayList<>();
+
     public Post(User user, String title, String content, double latitude, double longitude, String domain) {
         this.user = user;
         this.title = title;
@@ -61,6 +63,10 @@ public class Post extends BaseEntity {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public void setDomain(String domain) {
+        this.domain = domain;
     }
 
     //-------연관관계 메서드-------//

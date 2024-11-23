@@ -13,6 +13,7 @@ public class PostUpdateRequestDTO {
     private String content;
     private double latitude;
     private double longitude;
+    private String domain;
     private FileDataDTO representativeFileData;
     private List<FileDataDTO> fileData;
 }
