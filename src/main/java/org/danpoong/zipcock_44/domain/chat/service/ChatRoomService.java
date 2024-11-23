@@ -31,10 +31,10 @@ public class ChatRoomService {
     private final ChatMessageRepository chatMessageRepository;
     private final ChatMessageReadRepository chatMessageReadRepository;
 
-    public ChatRoomDto createChatRoom(Long postId, Long buyerId) {
+    public ChatRoomDto createChatRoom(Long postId, String username) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException("게시글을 찾을 수 없습니다."));
-        User buyer = userRepository.findById(buyerId)
+        User buyer = userRepository.findByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException("구매자를 찾을 수 없습니다."));
         User seller = post.getUser();
 
@@ -44,7 +44,7 @@ public class ChatRoomService {
         }
 
         // 이미 존재하는 채팅방인지 확인
-        Optional<ChatRoom> existingChatRoom = chatRoomRepository.findByPostIdAndBuyerId(postId, buyerId);
+        Optional<ChatRoom> existingChatRoom = chatRoomRepository.findByPost_IdAndBuyer_Username(postId, username);
         if (existingChatRoom.isPresent()) {
             return ChatRoomDto.fromEntity(existingChatRoom.get());
         }
