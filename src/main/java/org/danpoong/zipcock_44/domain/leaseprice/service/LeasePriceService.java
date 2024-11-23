@@ -1,11 +1,14 @@
 package org.danpoong.zipcock_44.domain.leaseprice.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.danpoong.zipcock_44.domain.leaseprice.domain.LegalDongCode;
 import org.danpoong.zipcock_44.domain.leaseprice.dto.LeasePriceRequestDto;
 import org.danpoong.zipcock_44.domain.leaseprice.dto.LeasePriceResponseDto;
+import org.danpoong.zipcock_44.global.common.code.ErrorCode;
+import org.danpoong.zipcock_44.global.common.response.CustomException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -48,44 +51,43 @@ public class LeasePriceService {
         RestTemplate restTemplate = new RestTemplate();
         String jsonResponse = restTemplate.getForObject(url, String.class);
         List<LeasePriceResponseDto> responseList = new ArrayList<>();
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode rootNode;
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode rootNode = objectMapper.readTree(jsonResponse);
-            String resultCode = rootNode.path("tbLnOpendataRentV").path("RESULT").path("CODE").asText();
+            rootNode = objectMapper.readTree(jsonResponse);
+        } catch (JsonProcessingException e) {
+            throw new CustomException(ErrorCode.ERROR_WHILE_PARSING_JSON);
+        }
 
-            switch (resultCode) {
-                case "INFO-200":
-                    throw new IllegalArgumentException("요청에 해당하는 정보가 없습니다.");
-                case "INFO-000":
-                    JsonNode rows = rootNode.path("tbLnOpendataRentV").path("row");
-                    for (JsonNode row : rows) {
-                        LeasePriceResponseDto dto = LeasePriceResponseDto.builder()
-                                .cggNm(row.path("CGG_NM").asText())
-                                .stdgNm(row.path("STDG_NM").asText())
-                                .mno(row.path("MNO").asText())
-                                .sno(row.path("SNO").asText())
-                                .ctrtDay(row.path("CTRT_DAY").asText())
-                                .rentSe(row.path("RENT_SE").asText())
-                                .rentArea(row.path("RENT_AREA").asDouble())
-                                .grfe(row.path("GRFE").asText())
-                                .rtfe(row.path("RTFE").asText())
-                                .bldgNm(row.path("BLDG_NM").asText())
-                                .bldgUsg(row.path("BLDG_USG").asText())
-                                .archYr(row.path("ARCH_YR").asText())
-                                .ctrtPrd(row.path("CTRT_PRD").asText())
-                                .newUpdtYn(row.path("NEW_UPDT_YN").asText())
-                                .bfrGrfe(row.path("BFR_GRFE").asText())
-                                .bfrRtfe(row.path("BFR_RTFE").asText())
-                                .build();
-                        responseList.add(dto);
-                    }
-                    break;
-                default:
-                    throw new IllegalArgumentException("요청이 올바르지 않습니다.");
+        if (!rootNode.has("tbLnOpendataRentV") || rootNode.path("tbLnOpendataRentV").isEmpty())
+            throw new CustomException(ErrorCode.REQUEST_NOT_VALID);
+
+        String resultCode = rootNode.path("tbLnOpendataRentV").path("RESULT").path("CODE").asText();
+        if (resultCode.equals("INFO-000")) {
+            JsonNode rows = rootNode.path("tbLnOpendataRentV").path("row");
+            for (JsonNode row : rows) {
+                LeasePriceResponseDto dto = LeasePriceResponseDto.builder()
+                        .cggNm(row.path("CGG_NM").asText())
+                        .stdgNm(row.path("STDG_NM").asText())
+                        .mno(row.path("MNO").asText())
+                        .sno(row.path("SNO").asText())
+                        .ctrtDay(row.path("CTRT_DAY").asText())
+                        .rentSe(row.path("RENT_SE").asText())
+                        .rentArea(row.path("RENT_AREA").asDouble())
+                        .grfe(row.path("GRFE").asText())
+                        .rtfe(row.path("RTFE").asText())
+                        .bldgNm(row.path("BLDG_NM").asText())
+                        .bldgUsg(row.path("BLDG_USG").asText())
+                        .archYr(row.path("ARCH_YR").asText())
+                        .ctrtPrd(row.path("CTRT_PRD").asText())
+                        .newUpdtYn(row.path("NEW_UPDT_YN").asText())
+                        .bfrGrfe(row.path("BFR_GRFE").asText())
+                        .bfrRtfe(row.path("BFR_RTFE").asText())
+                        .build();
+                responseList.add(dto);
             }
-        } catch (Exception e) {
-            log.error("Error parsing JSON response", e);
-            throw new IllegalArgumentException("데이터 파싱 과정 중 오류가 발생했습니다.");
+        } else {
+            throw new CustomException(ErrorCode.REQUEST_NOT_VALID);
         }
         log.info("Response Complete.");
         return responseList;
