@@ -9,6 +9,7 @@ import org.danpoong.zipcock_44.global.jwt.filter.JWTUtil;
 import org.danpoong.zipcock_44.global.jwt.filter.LoginFilterImpl;
 import org.danpoong.zipcock_44.global.jwt.filter.LogoutFilterImpl;
 import org.danpoong.zipcock_44.global.jwt.repository.RefreshRepository;
+import org.danpoong.zipcock_44.global.security.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -41,8 +42,15 @@ public class SecurityConfig {
     // @Data 혹은 @RequiredArgsConstructor 어노테이션으로 DI 필수
     private final JWTUtil jwtUtil;
     private final RefreshRepository refreshRepository;
+    private final UserDetailsServiceImpl userDetailsService;
 
-
+    @Autowired
+    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil, RefreshRepository refreshRepository, UserDetailsServiceImpl userDetailsService) {
+        this.authenticationConfiguration = authenticationConfiguration;
+        this.jwtUtil = jwtUtil;
+        this.refreshRepository = refreshRepository;
+        this.userDetailsService = userDetailsService;
+    }
 
     // 카카오 로그인 허용 URL
     public static final String[] allowUrls = {
@@ -118,7 +126,7 @@ public class SecurityConfig {
                         .requestMatchers("/signout","/logout","/kakaoLogout").authenticated() // 회원 탈퇴는 인증된 사용자만 가능
                         .anyRequest().authenticated()); // 나머지 경로는 인증된 사용자만 사용 가능
         http
-                .addFilterBefore(new JWTFilter(jwtUtil),LoginFilterImpl.class);
+                .addFilterBefore(new JWTFilter(jwtUtil, userDetailsService),LoginFilterImpl.class);
         http
                 .addFilterAt(new LoginFilterImpl(authenticationManager(authenticationConfiguration), jwtUtil, refreshRepository), UsernamePasswordAuthenticationFilter.class);
         http

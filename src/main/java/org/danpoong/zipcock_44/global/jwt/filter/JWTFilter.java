@@ -6,12 +6,10 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.danpoong.zipcock_44.domain.user.entity.User;
 import org.danpoong.zipcock_44.global.security.entity.UserDetailsImpl;
+import org.danpoong.zipcock_44.global.security.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,10 +26,12 @@ public class JWTFilter extends OncePerRequestFilter{
 
 
     private final JWTUtil jwtUtil;
+    private final UserDetailsServiceImpl userDetailsService;
 
     @Autowired
-    public JWTFilter(JWTUtil jwtUtil){
+    public JWTFilter(JWTUtil jwtUtil, UserDetailsServiceImpl userDetailsService) {
         this.jwtUtil = jwtUtil;
+        this.userDetailsService = userDetailsService;
     }
 
     @Override
@@ -72,21 +72,9 @@ public class JWTFilter extends OncePerRequestFilter{
             return;
         }
 
-        //accessToken에서 loginId,Role 받아오기
-        String loginId = jwtUtil.getLoginId(accessToken);
-        String role = jwtUtil.getRole(accessToken);
-
-        // user 객체 생성 후 필드 주입
-        User user = User.builder()
-                .loginId(loginId)
-                .role(role)
-                .build();
-
-        log.info("c");
-
-        UserDetailsImpl userDetailsImpl = new UserDetailsImpl(user);
-
-        Authentication authToken = new UsernamePasswordAuthenticationToken(userDetailsImpl,null,userDetailsImpl.getAuthorities());
+        // accessToken에서 추출한 loginId를 바탕으로 DB를 통해 사용자 객체 생성, ContextHolder에 반영
+        UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService.loadUserByUsername(jwtUtil.getLoginId(accessToken));
+        Authentication authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authToken);
         log.info("last");
         filterChain.doFilter(request, response);

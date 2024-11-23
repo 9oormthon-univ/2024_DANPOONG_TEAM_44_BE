@@ -7,11 +7,14 @@ import org.danpoong.zipcock_44.domain.post.dto.response.PostSearchResponseDTO;
 import org.danpoong.zipcock_44.domain.post.entity.Image;
 import org.danpoong.zipcock_44.domain.post.entity.Post;
 import org.danpoong.zipcock_44.domain.post.service.PostService;
+import org.danpoong.zipcock_44.domain.user.entity.User;
 import org.danpoong.zipcock_44.global.common.response.ApiResponse;
+import org.danpoong.zipcock_44.global.security.entity.UserDetailsImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Base64;
@@ -29,7 +32,10 @@ public class PostController {
 
     //게시글 생성
     @PostMapping
-    public ApiResponse<?> createPostWithJson(@RequestBody PostRequestDTO dto) {
+    public ApiResponse<?> createPostWithJson(@RequestBody PostRequestDTO dto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
+        System.out.println("user = " + user.getId());
+
         List<Image> images = dto.getFileData().stream()
                 .map(fileData -> Image.builder()
                         .imageData(Base64.getDecoder().decode(fileData.getFileContent()))
