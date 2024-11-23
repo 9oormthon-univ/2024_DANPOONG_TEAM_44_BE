@@ -168,10 +168,10 @@ public class PostController {
 
     //내가 작성한 글 서치
     @GetMapping("/my-posts")
-    public ApiResponse<Page<PostSearchResponseDTO>> getMyPosts(@RequestParam Long userId,
+    public ApiResponse<Page<PostSearchResponseDTO>> getMyPosts(@RequestParam String username,
                                                                @PageableDefault(size = 10, page = 0, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
 
-        Page<Post> posts = postService.findPostsByUser(userId, pageable);
+        Page<Post> posts = postService.findPostsByUser(username, pageable);
 
         // DTO로 변환
         Page<PostSearchResponseDTO> responseDTOs = posts.map(post -> {

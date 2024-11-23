@@ -78,6 +78,9 @@ public class PostService {
         if (requestDTO.getContent() != null) {
             post.setContent(requestDTO.getContent());
         }
+        if (requestDTO.getDomain() != null) {
+            post.setDomain(requestDTO.getDomain());
+        }
 
         // 기존 이미지 삭제 후 새로운 이미지 설정
         post.getImages().clear();
@@ -123,8 +126,8 @@ public class PostService {
 
 
     @Transactional(readOnly = true)
-    public Page<Post> findPostsByUser(Long userId, Pageable pageable) {
-        return postRepository.findAllByUserId(userId, pageable);
+    public Page<Post> findPostsByUser(String username, Pageable pageable) {
+        return postRepository.findAllByUserUsername(username, pageable);
     }
 
 }
