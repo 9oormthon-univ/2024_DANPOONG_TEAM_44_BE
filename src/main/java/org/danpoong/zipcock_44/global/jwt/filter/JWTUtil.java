@@ -2,14 +2,12 @@ package org.danpoong.zipcock_44.global.jwt.filter;
 
 import io.jsonwebtoken.*;
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
-import java.security.SignatureException;
 import java.util.Date;
 @Component
 @Data
@@ -80,4 +78,17 @@ public class JWTUtil {
                 .signWith(secretKey) // secretKey를 통해 signature 부분을 채움
                 .compact(); // JWT를 문자열 형식으로 변환하여 반환
     }
+
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parser()
+                    .setSigningKey(secretKey)
+                    .build()
+                    .parseClaimsJws(token);
+            return true; // Token is valid
+        } catch (JwtException e) {
+            return false;
+        }
+    }
+
 }
